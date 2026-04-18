@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>京大突破！シスタンマスター v18</title>
+    <style>
+        :root {
+            --bg: #121212; --card: #1e1e1e; --text: #e0e0e0;
+            --primary: #bb86fc; --v-color: #03dac6; --n-color: #cf6679;
+            --a-color: #ffb74d; --correct: #4caf50; --wrong: #f44336;
+            --toshin-part1: #f26d7d;
+            --toshin-all: #ff9800;
+        }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: var(--bg); margin: 0; padding: 10px; color: var(--text); touch-action: manipulation; }
+        .container { background: var(--card); padding: 20px 15px; border-radius: 12px; max-width: 500px; margin: auto; box-sizing: border-box; position: relative; }
+        h2 { font-size: 22px; margin-top: 5px; color: var(--primary); letter-spacing: 1px;}
+        
+        .start-btn { width: 100%; background: var(--primary); color: #000; font-weight: bold; font-size: 20px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 15px; cursor: pointer;}
+        .weak-btn { width: 100%; background: #444; color: #fff; font-weight: bold; font-size: 18px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border-left: 6px solid var(--n-color);}
+        
+        /* 東進風 UI (視認性向上) */
+        .toshin-header { background: #222; border: 1px solid #444; border-radius: 8px; padding: 15px; margin-bottom: 18px; text-align: left; display: flex; justify-content: space-between; align-items: flex-end; cursor: pointer;}
+        .toshin-header-title { font-size: 22px; font-weight: bold; letter-spacing: 2px;}
+        .toshin-header-stats { font-size: 14px; color: #ccc; }
+        /* 3層メーターのベース */
+        .bar-bg { background: #111; height: 12px; border-radius: 6px; margin-top: 10px; position: relative; overflow: hidden; border: 1px solid #333; }
+        .bar-learn { background: #666; height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s; }
+        .bar-mast { height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s; }
+        #bar-mast-all { background: var(--toshin-all); }
+
+        .toshin-part-title { background: #ddd; color: #222; font-weight: bold; font-size: 16px; padding: 8px 12px; text-align: left; margin: 15px -15px 8px -15px; }
+        
+        .toshin-stage { background: #2a2a2a; border-radius: 8px; display: flex; align-items: stretch; margin-bottom: 10px; overflow: hidden; cursor: pointer; border: 1px solid #111; box-shadow: 0 2px 4px rgba(0,0,0,0.5);}
+        .toshin-stage:active { transform: scale(0.98); }
+        .toshin-stage-left { background: #1a1a1a; color: var(--toshin-part1); padding: 12px; display: flex; flex-direction: column; justify-content: center; width: 60px; font-weight: bold; font-size: 14px; text-align: center; border-right: 1px solid #333;}
+        .toshin-stage-left span { font-size: 24px; line-height: 1; margin-top: 2px;}
+        .toshin-stage-mid { flex-grow: 1; padding: 12px; text-align: left; }
+        .toshin-stage-title { font-size: 16px; font-weight: bold; color: var(--toshin-part1); margin-bottom: 8px;}
+        .toshin-stage-stats { font-size: 13px; color: #ccc; display: flex; align-items: center;}
+        
+        .stage-bar-bg { background: #111; height: 10px; width: 70px; border-radius: 5px; position: relative; overflow: hidden; margin-right: 10px; display: inline-block;}
+        .stage-bar-learn { background: #666; height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s;}
+        .stage-bar-mast { background: var(--toshin-part1); height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s;}
+
+        .toshin-stage-right { background: var(--toshin-part1); color: #000; width: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; }
+
+        /* モーダル */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 50; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; }
+        .modal-btn { width: 100%; background: #333; color: #fff; padding: 15px; margin-bottom: 10px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; }
+
+        /* テスト画面用スタイル */
+        .star-rating { color: #f1c40f; font-size: 18px; margin-bottom: 5px; letter-spacing: 3px; }
+        .word { font-size: 38px; font-weight: bold; color: var(--primary); margin: 5px 0; min-height: 45px; }
+        #sub-instruction { font-size: 14px; font-weight: bold; margin-bottom: 10px; min-height: 20px; }
+        .phrase { font-size: 22px; color: #ffeb3b; font-weight: bold; margin-bottom: 15px; min-height: 30px; }
+        
+        /* 縦長2列レイアウト (ボタン巨大化) */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        button.choice-btn { padding: 20px 8px; font-size: 14px; font-weight: bold; border: none; border-radius: 10px; background: #333; color: #fff; cursor: pointer; line-height: 1.4; word-break: keep-all; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
+        button.choice-btn.v { border-bottom: 5px solid var(--v-color); }
+        button.choice-btn.n { border-bottom: 5px solid var(--n-color); }
+        button.choice-btn.a { border-bottom: 5px solid var(--a-color); }
+        button.choice-btn:active { transform: translateY(2px); box-shadow: none; }
+        
+        .next-btn { grid-column: span 2; background: var(--primary); color: #000; font-weight: bold; padding: 20px; margin-top: 5px; font-size: 18px; border: none; border-radius: 10px;}
+        #timer-display { font-size: 18px; font-weight: bold; color: var(--n-color); margin: 8px 0; }
+        .badge { padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 8px;}
+        .review-badge { background: var(--n-color); color: #fff; }
+        .retry-badge { background: #fff; color: #000; }
+        .result-list { text-align: left; max-height: 300px; overflow-y: auto; background: #252525; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 16px; }
+        .result-list div { margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 6px; }
+        #huge-mark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 200px; opacity: 0; pointer-events: none; z-index: 100; transition: opacity 0.1s; }
+        .show-mark { opacity: 0.7 !important; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="huge-mark"></div>
+
+<div class="container" id="home-screen">
+    <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v18</span></h2>
+    <p style="font-size: 13px; color: #888; margin-bottom: 25px;">京大突破に向けた最強のボキャビル</p>
+    
+    <button class="start-btn" onclick="showStageScreen()">学習を始める</button>
+    <button class="weak-btn" onclick="startWeakQuiz()">苦手単語を解き直す <span id="weak-count"></span></button>
+</div>
+
+<div class="container hidden" id="stage-screen">
+    <button onclick="showHomeScreen()" style="background:none; border:none; color:#aaa; font-size:16px; font-weight:bold; text-align:left; width:100%; padding:10px 0; margin-bottom:10px;">＜ TOPへ戻る</button>
+    
+    <div class="toshin-header" onclick="openModal('all', '全範囲')">
+        <div style="flex-grow: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <span class="toshin-header-title">全範囲</span>
+                <span class="toshin-header-stats">修得：<span id="stat-all-mastered">0</span> / <span id="stat-all-total">0</span> 語 (<span id="stat-all-percent">0</span>%)</span>
+            </div>
+            <div class="bar-bg">
+                <div class="bar-learn" id="bar-learn-all"></div>
+                <div class="bar-mast" id="bar-mast-all"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toshin-part-title">ROUND 1 <span style="font-size:11px; color:#666; margin-left:10px;">PART1 頻出度 ★★★</span></div>
+    
+    <div class="toshin-stage" onclick="openModal('part1', 'PART 1 全範囲')">
+        <div class="toshin-stage-left">PART<span>1</span></div>
+        <div class="toshin-stage-mid">
+            <div class="toshin-stage-title">No.0001 - 0600 (PART 1)</div>
+            <div class="toshin-stage-stats">
+                <div class="stage-bar-bg">
+                    <div class="stage-bar-learn" id="bar-learn-part1"></div>
+                    <div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-part1"></div>
+                </div>
+                <span id="stat-part1-mastered">0</span> / <span id="stat-part1-total">0</span>語
+            </div>
+        </div>
+        <div class="toshin-stage-right">＞</div>
+    </div>
+
+    <div class="toshin-stage" onclick="openModal('1-100', 'STAGE 01 (1-100)')">
+        <div class="toshin-stage-left">STAGE<span>01</span></div>
+        <div class="toshin-stage-mid">
+            <div class="toshin-stage-title">No.0001 - 0100</div>
+            <div class="toshin-stage-stats">
+                <div class="stage-bar-bg">
+                    <div class="stage-bar-learn" id="bar-learn-st1"></div>
+                    <div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st1"></div>
+                </div>
+                <span id="stat-st1-mastered">0</span> / <span id="stat-st1-total">0</span>語
+            </div>
+        </div>
+        <div class="toshin-stage-right">＞</div>
+    </div>
+    
+    <div class="toshin-stage" onclick="openModal('101-200', 'STAGE 02 (101-200)')">
+        <div class="toshin-stage-left">STAGE<span>02</span></div>
+        <div class="toshin-stage-mid">
+            <div class="toshin-stage-title">No.0101 - 0200</div>
+            <div class="toshin-stage-stats">
+                <div class="stage-bar-bg">
+                    <div class="stage-bar-learn" id="bar-learn-st2"></div>
+                    <div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st2"></div>
+                </div>
+                <span id="stat-st2-mastered">0</span> / <span id="stat-st2-total">0</span>語
+            </div>
+        </div>
+        <div class="toshin-stage-right">＞</div>
+    </div>
+</div>
+
+<div id="settings-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h3 id="modal-title" style="margin-top:0; color:var(--primary); font-size:22px;">範囲選択</h3>
+        <p style="font-size:14px; color:#ccc; margin-bottom:20px;">出題数を選んでください</p>
+        <button class="modal-btn" onclick="setCount(10)">10問</button>
+        <button class="modal-btn" onclick="setCount(20)">20問</button>
+        <button class="modal-btn" onclick="setCount(50)">50問</button>
+        <button class="modal-btn" onclick="setCount('all')">全問</button>
+        <button class="modal-btn" style="background:none; border:2px solid #666; margin-top:15px;" onclick="closeModal()">キャンセル</button>
+    </div>
+</div>
+
+<div class="container hidden" id="game-screen">
+    <div id="progress" style="font-size: 14px; font-weight:bold; margin-bottom: 5px; display:flex; justify-content:center; align-items:center;">
+        <span id="progress-text"></span><span id="screen-badge"></span>
+    </div>
+    <div id="timer-display">⏳ 8.0s</div>
+    <div class="star-rating" id="target-star"></div>
+    <div class="word" id="target-word"></div>
+    <div id="sub-instruction"></div>
+    <div class="phrase" id="target-phrase"></div>
+    <div class="grid" id="choices-grid"></div>
+    <div id="result-message" style="margin-top: 15px; min-height: 25px; font-size: 18px;"></div>
+    <button onclick="location.reload()" style="background: none; border: none; color: #888; text-decoration: underline; margin-top: 20px; font-size: 14px;">QUIT（記録せず中断）</button>
+</div>
+
+<div class="container hidden" id="result-screen">
+    <h2 id="result-title" style="font-size: 26px;">結果発表</h2>
+    <div id="score-display" style="font-size: 28px; font-weight: bold; margin: 15px 0;"></div>
+    <div class="result-list" id="wrong-list"></div>
+    <button id="retry-wrong-btn" class="start-btn hidden" onclick="startQuizMode(true)">間違えた問題だけ解き直し</button>
+    <button class="start-btn" style="background:#444; color:#fff;" onclick="location.reload()">HOMEに戻る</button>
+</div>
+
+<script>
+    // ----------------------------------------------------------------
+    // 単語データ（★ A/B構文用 hint 追加！）
+    // ----------------------------------------------------------------
+    const masterWordList = [
+        // 1-100
+        { id: 1, part: 1, pos: "v", star: 3, en: "follow", ja: ["～の後に続く", "～に従う"], phrase: "follow his advice" },
+        { id: 2, part: 1, pos: "v", star: 3, en: "consider", ja: ["～を考慮する"], phrase: "consider the problem" },
+        { id: 3, part: 1, pos: "v", star: 2, en: "increase", ja: ["増える", "～を増やす"], phrase: "increase by 20%" },
+        { id: 4, part: 1, pos: "v", star: 2, en: "expect", ja: ["～を予期する"], phrase: "expect him to arrive" },
+        { id: 5, part: 1, pos: "v", star: 1, en: "decide", ja: ["～することを決意する"], phrase: "decide to go" },
+        { id: 6, part: 1, pos: "v", star: 3, en: "develop", ja: ["発達する", "～を発達させる"], phrase: "develop a new theory" },
+        { id: 7, part: 1, pos: "v", star: 3, en: "provide", ja: ["～を供給する", "与える"], phrase: "provide him with info" },
+        { id: 8, part: 1, pos: "v", star: 1, en: "continue", ja: ["続く", "～を続ける"], phrase: "continue to work" },
+        { id: 9, part: 1, pos: "v", star: 2, en: "include", ja: ["～を含む", "含める"], phrase: "include tax" },
+        { id: 10, part: 1, pos: "v", star: 3, en: "remain", ja: ["ままでいる"], phrase: "remain silent" },
+        { id: 11, part: 1, pos: "v", star: 2, en: "reach", ja: ["～に着く", "～に達する"], phrase: "reach the station" },
+        { id: 12, part: 1, pos: "v", star: 3, en: "allow", ja: ["～を許可する"], phrase: "allow him to go" },
+        { id: 13, part: 1, pos: "v", star: 3, en: "force", ja: ["～を強制する"], phrase: "force him to work" },
+        { id: 14, part: 1, pos: "v", star: 2, en: "offer", ja: ["～を申し出る"], phrase: "offer help" },
+        { id: 15, part: 1, pos: "v", star: 3, en: "realize", ja: ["～を悟る"], phrase: "realize the truth" },
+        { id: 16, part: 1, pos: "v", star: 3, en: "suggest", ja: ["～と提案する", "～をほのめかす"], phrase: "suggest a new plan" },
+        { id: 17, part: 1, pos: "v", star: 3, en: "require", ja: ["～を必要とする"], phrase: "require attention" },
+        { id: 18, part: 1, pos: "v", star: 1, en: "worry", ja: ["心配する"], phrase: "worry about the future" },
+        { id: 19, part: 1, pos: "v", star: 2, en: "wonder", ja: ["～かと疑問に思う"], phrase: "wonder why" },
+        { id: 20, part: 1, pos: "v", star: 3, en: "cost", ja: ["～を要する"], phrase: "cost 100 dollars" },
+        { id: 21, part: 1, pos: "v", star: 2, en: "tend", ja: ["～する傾向がある", "～しがちである"], phrase: "tend to forget" },
+        { id: 22, part: 1, pos: "v", star: 3, en: "depend", ja: ["～に依存する", "～しだいで決まる"], phrase: "depend on the weather" },
+        { id: 23, part: 1, pos: "v", star: 1, en: "share", ja: ["～を分け合う", "共有する"], phrase: "share a room" },
+        { id: 24, part: 1, pos: "v", star: 3, en: "demand", ja: ["～を要求する"], phrase: "demand an apology" },
+        { id: 25, part: 1, pos: "v", star: 1, en: "support", ja: ["～を支持する"], phrase: "support the idea" },
+        { id: 26, part: 1, pos: "v", star: 1, en: "hire", ja: ["～を雇う"], phrase: "hire a lawyer" },
+        { id: 27, part: 1, pos: "v", star: 3, en: "regard", hint: "A as B", ja: ["AをBだと思う", "みなす"], phrase: "regard A as B" },
+        { id: 28, part: 1, pos: "v", star: 2, en: "base", hint: "A on B", ja: ["AがBに基づいている"], phrase: "be based on facts" },
+        { id: 29, part: 1, pos: "v", star: 2, en: "improve", ja: ["～を向上させる"], phrase: "improve the quality" },
+        { id: 30, part: 1, pos: "v", star: 3, en: "recognize", ja: ["～を認める"], phrase: "recognize the importance" },
+        { id: 31, part: 1, pos: "v", star: 2, en: "notice", ja: ["～に気づく"], phrase: "notice the change" },
+        { id: 32, part: 1, pos: "v", star: 3, en: "suppose", ja: ["～だと思う"], phrase: "suppose that..." },
+        { id: 33, part: 1, pos: "v", star: 3, en: "raise", ja: ["～を上げる", "～を育てる"], phrase: "raise children" },
+        { id: 34, part: 1, pos: "v", star: 2, en: "prefer", ja: ["～をより好む"], phrase: "prefer tea to coffee" },
+        { id: 35, part: 1, pos: "v", star: 1, en: "cheer", ja: ["～を励ます"], phrase: "cheer him up" },
+        { id: 36, part: 1, pos: "v", star: 3, en: "suffer", ja: ["～を経験する", "受ける", "苦しむ"], phrase: "suffer from cancer" },
+        { id: 37, part: 1, pos: "v", star: 3, en: "describe", ja: ["～を描写する", "～の特徴を説明する"], phrase: "describe the scene" },
+        { id: 38, part: 1, pos: "v", star: 3, en: "prevent", ja: ["～をさまたげる"], phrase: "prevent him from going" },
+        { id: 39, part: 1, pos: "v", star: 2, en: "reduce", ja: ["～を減らす"], phrase: "reduce costs" },
+        { id: 40, part: 1, pos: "v", star: 2, en: "mistake", hint: "A for B", ja: ["～を誤解する", "AをBとまちがえる"], phrase: "mistake A for B" },
+        { id: 41, part: 1, pos: "v", star: 2, en: "prepare", ja: ["～の準備をする"], phrase: "prepare for the exam" },
+        { id: 42, part: 1, pos: "v", star: 3, en: "encourage", ja: ["はげます"], phrase: "encourage him to try" },
+        { id: 43, part: 1, pos: "v", star: 3, en: "prove", ja: ["～だとわかる"], phrase: "prove to be true" },
+        { id: 44, part: 1, pos: "v", star: 3, en: "treat", ja: ["～をあつかう"], phrase: "treat him kindly" },
+        { id: 45, part: 1, pos: "v", star: 3, en: "establish", ja: ["～を設立する", "創立する"], phrase: "establish a company" },
+        { id: 46, part: 1, pos: "v", star: 3, en: "relate", ja: ["関係がある"], phrase: "be related to..." },
+        { id: 47, part: 1, pos: "v", star: 3, en: "compare", hint: "A with B", ja: ["AとBを比較する", "AをBにたとえる"], phrase: "compare A with B" },
+        { id: 48, part: 1, pos: "v", star: 2, en: "spread", ja: ["～を広げる", "広がる"], phrase: "spread the rumor" },
+        { id: 49, part: 1, pos: "v", star: 3, en: "refer", ja: ["～を指示する"], phrase: "refer to the book" },
+        { id: 50, part: 1, pos: "v", star: 2, en: "supply", ja: ["～を供給する"], phrase: "supply them with food" },
+        { id: 51, part: 1, pos: "v", star: 2, en: "gain", ja: ["～を得る"], phrase: "gain knowledge" },
+        { id: 52, part: 1, pos: "v", star: 2, en: "destroy", ja: ["～を破壊する"], phrase: "destroy the building" },
+        { id: 53, part: 1, pos: "v", star: 3, en: "apply", ja: ["当てはまる", "申し込む"], phrase: "apply to the case" },
+        { id: 54, part: 1, pos: "v", star: 2, en: "seek", ja: ["～を求める"], phrase: "seek advice" },
+        { id: 55, part: 1, pos: "v", star: 1, en: "search", ja: ["～を捜す"], phrase: "search for the key" },
+        { id: 56, part: 1, pos: "v", star: 3, en: "claim", ja: ["～と主張する"], phrase: "claim that..." },
+        { id: 57, part: 1, pos: "v", star: 3, en: "draw", ja: ["～を引っぱる"], phrase: "draw a conclusion" },
+        { id: 58, part: 1, pos: "v", star: 2, en: "refuse", ja: ["～を断る"], phrase: "refuse to answer" },
+        { id: 59, part: 1, pos: "v", star: 2, en: "respond", ja: ["～に返答する"], phrase: "respond to the question" },
+        { id: 60, part: 1, pos: "v", star: 2, en: "mention", ja: ["～について述べる"], phrase: "mention the fact" },
+        { id: 61, part: 1, pos: "v", star: 2, en: "judge", ja: ["～を判断する"], phrase: "judge by appearance" },
+        { id: 62, part: 1, pos: "v", star: 3, en: "approach", ja: ["～に接近する", "～に取り組む", "方法"], phrase: "approach the problem" },
+        { id: 63, part: 1, pos: "v", star: 3, en: "admit", ja: ["～を認める"], phrase: "admit your mistake" },
+        { id: 64, part: 1, pos: "v", star: 3, en: "reflect", ja: ["～を反映する", "～を反射する"], phrase: "reflect the reality" },
+        { id: 65, part: 1, pos: "v", star: 3, en: "perform", ja: ["～を行う", "～を遂行する"], phrase: "perform a task" },
+        { id: 66, part: 1, pos: "v", star: 1, en: "bore", ja: ["～をうんざりさせる"], phrase: "bore me to death" },
+        { id: 67, part: 1, pos: "v", star: 2, en: "survive", ja: ["生き残る"], phrase: "survive the war" },
+        { id: 68, part: 1, pos: "v", star: 3, en: "represent", ja: ["～を表す"], phrase: "represent the company" },
+        { id: 69, part: 1, pos: "v", star: 3, en: "argue", ja: ["～と主張する"], phrase: "argue that..." },
+        { id: 70, part: 1, pos: "v", star: 3, en: "grant", ja: ["～を認める", "～を与える"], phrase: "take it for granted" },
+        { id: 71, part: 1, pos: "v", star: 3, en: "indicate", ja: ["～を指し示す"], phrase: "indicate the fact" },
+        { id: 72, part: 1, pos: "v", star: 2, en: "belong", ja: ["所属している"], phrase: "belong to the club" },
+        { id: 73, part: 1, pos: "v", star: 3, en: "acquire", ja: ["～を習得する"], phrase: "acquire language" },
+        { id: 74, part: 1, pos: "v", star: 1, en: "reply", ja: ["返事をする"], phrase: "reply to the letter" },
+        { id: 75, part: 1, pos: "v", star: 2, en: "feed", ja: ["～にエサをやる"], phrase: "feed the dog" },
+        { id: 76, part: 1, pos: "v", star: 2, en: "escape", ja: ["逃げる"], phrase: "escape from danger" },
+        { id: 77, part: 1, pos: "v", star: 3, en: "replace", hint: "A with B", ja: ["Aに取って代わる", "AをBと取り替える"], phrase: "replace A with B" },
+        { id: 78, part: 1, pos: "v", star: 3, en: "reveal", ja: ["～を明らかにする"], phrase: "reveal the secret" },
+        { id: 79, part: 1, pos: "v", star: 2, en: "surround", ja: ["～を取り囲む"], phrase: "surround the house" },
+        { id: 80, part: 1, pos: "v", star: 2, en: "suit", ja: ["～に合う"], phrase: "suit your taste" },
+        { id: 81, part: 1, pos: "v", star: 3, en: "estimate", ja: ["～を推定する"], phrase: "estimate the cost" },
+        { id: 82, part: 1, pos: "v", star: 2, en: "aim", ja: ["～をねらう"], phrase: "aim at the target" },
+        { id: 83, part: 1, pos: "v", star: 2, en: "earn", ja: ["～をもうける", "かせぐ"], phrase: "earn money" },
+        { id: 84, part: 1, pos: "v", star: 3, en: "decline", ja: ["衰退する", "低下する", "～を辞退する"], phrase: "decline the offer" },
+        { id: 85, part: 1, pos: "v", star: 3, en: "afford", ja: ["～をする余裕がある"], phrase: "can afford to buy" },
+        { id: 86, part: 1, pos: "v", star: 2, en: "confuse", hint: "A with B", ja: ["～を当惑させる", "AをBと混同する"], phrase: "confuse A with B" },
+        { id: 87, part: 1, pos: "v", star: 1, en: "graduate", ja: ["～を卒業する"], phrase: "graduate from college" },
+        { id: 88, part: 1, pos: "v", star: 3, en: "vary", ja: ["変わる", "さまざまである"], phrase: "vary from country to country" },
+        { id: 89, part: 1, pos: "v", star: 2, en: "remove", ja: ["～を移す", "取り去る"], phrase: "remove the dirt" },
+        { id: 90, part: 1, pos: "v", star: 3, en: "insist", ja: ["～と主張する", "言い張る"], phrase: "insist on going" },
+        { id: 91, part: 1, pos: "v", star: 3, en: "examine", ja: ["～を調査する"], phrase: "examine the body" },
+        { id: 92, part: 1, pos: "v", star: 2, en: "remind", hint: "A of B", ja: ["ＡにＢを思い出させる"], phrase: "remind A of B" },
+        { id: 93, part: 1, pos: "v", star: 3, en: "contribute", ja: ["～に貢献する", "～の一因となる", "寄付する"], phrase: "contribute to society" },
+        { id: 94, part: 1, pos: "v", star: 2, en: "warn", ja: ["～に警告する"], phrase: "warn him of danger" },
+        { id: 95, part: 1, pos: "v", star: 1, en: "connect", ja: ["～をつなぐ"], phrase: "connect to the Internet" },
+        { id: 96, part: 1, pos: "v", star: 2, en: "match", ja: ["～に匹敵する", "～に調和する"], phrase: "match your shirt" },
+        { id: 97, part: 1, pos: "v", star: 2, en: "focus", ja: ["焦点を合わせる"], phrase: "focus on the issue" },
+        { id: 98, part: 1, pos: "v", star: 3, en: "reject", ja: ["～を断る"], phrase: "reject the proposal" },
+        { id: 99, part: 1, pos: "v", star: 3, en: "convince", ja: ["～を納得させる", "確信させる"], phrase: "convince him of the fact" },
+        { id: 100, part: 1, pos: "v", star: 3, en: "associate", hint: "A with B", ja: ["AをBに関連づける", "AからBを連想する"], phrase: "associate A with B" },
+        
+        // 101-200
+        { id: 101, part: 1, pos: "v", star: 2, en: "rush", ja: ["急いで行く"], phrase: "rush to the hospital" },
+        { id: 102, part: 1, pos: "v", star: 2, en: "stress", ja: ["～を強調する"], phrase: "stress the importance" },
+        { id: 103, part: 1, pos: "v", star: 3, en: "attract", ja: ["～を引きつける"], phrase: "attract attention" },
+        { id: 104, part: 1, pos: "v", star: 3, en: "rely", hint: "on A", ja: ["Aに頼る"], phrase: "rely on him" },
+        { id: 105, part: 1, pos: "v", star: 2, en: "regret", ja: ["～を後悔する"], phrase: "regret doing" },
+        { id: 106, part: 1, pos: "v", star: 3, en: "adopt", ja: ["～を採用する"], phrase: "adopt a new method" },
+        { id: 107, part: 1, pos: "v", star: 1, en: "shake", ja: ["～を振る"], phrase: "shake hands" },
+        { id: 108, part: 1, pos: "v", star: 2, en: "hurt", ja: ["～を傷つける"], phrase: "hurt my feelings" },
+        { id: 109, part: 1, pos: "v", star: 3, en: "operate", ja: ["作動する", "～を操作する", "手術する"], phrase: "operate the machine" },
+        { id: 110, part: 1, pos: "v", star: 3, en: "extend", ja: ["～を広げる", "延長する"], phrase: "extend the deadline" },
+        { id: 111, part: 1, pos: "v", star: 3, en: "blame", hint: "A for B", ja: ["～を非難する", "AをBのせいにする"], phrase: "blame A for B" },
+        { id: 112, part: 1, pos: "v", star: 3, en: "consist", hint: "of A", ja: ["Aで構成されている"], phrase: "consist of members" },
+        { id: 113, part: 1, pos: "v", star: 3, en: "persuade", ja: ["～を説得する"], phrase: "persuade him to go" },
+        { id: 114, part: 1, pos: "v", star: 2, en: "admire", ja: ["～に感心する"], phrase: "admire her courage" },
+        { id: 115, part: 1, pos: "v", star: 2, en: "disappoint", ja: ["～を失望させる"], phrase: "be disappointed at" },
+        { id: 116, part: 1, pos: "v", star: 3, en: "expand", ja: ["拡大する"], phrase: "expand the business" },
+        { id: 117, part: 1, pos: "v", star: 3, en: "preserve", ja: ["～を保護する"], phrase: "preserve nature" },
+        { id: 118, part: 1, pos: "v", star: 3, en: "struggle", ja: ["苦闘する", "もがく"], phrase: "struggle to survive" },
+        { id: 119, part: 1, pos: "v", star: 2, en: "arrange", ja: ["～の手はずを整える", "～を配列する"], phrase: "arrange a meeting" },
+        { id: 120, part: 1, pos: "v", star: 2, en: "disturb", ja: ["～を妨げる"], phrase: "disturb his sleep" },
+        { id: 121, part: 1, pos: "v", star: 2, en: "employ", ja: ["～を雇う", "～を用いる"], phrase: "employ a new system" },
+        { id: 122, part: 1, pos: "v", star: 3, en: "engage", hint: "in A", ja: ["Aに従事する", "Aを行う"], phrase: "engage in activities" },
+        { id: 123, part: 1, pos: "v", star: 3, en: "abandon", ja: ["～を捨てる"], phrase: "abandon the plan" },
+        { id: 124, part: 1, pos: "v", star: 2, en: "display", ja: ["～を展示する", "～を表す"], phrase: "display talent" },
+        { id: 125, part: 1, pos: "v", star: 3, en: "encounter", ja: ["～に偶然出会う"], phrase: "encounter a problem" },
+        { id: 126, part: 1, pos: "v", star: 2, en: "amuse", ja: ["～を楽しませる"], phrase: "amuse the children" },
+        { id: 127, part: 1, pos: "v", star: 2, en: "bother", ja: ["～に面倒をかける", "困らせる"], phrase: "bother to do" },
+        { id: 128, part: 1, pos: "v", star: 3, en: "concentrate", ja: ["集中する"], phrase: "concentrate on study" },
+        { id: 129, part: 1, pos: "v", star: 3, en: "adapt", ja: ["～を適応させる", "適応する"], phrase: "adapt to the environment" },
+        { id: 130, part: 1, pos: "v", star: 2, en: "puzzle", ja: ["～を当惑させる"], phrase: "puzzle the experts" },
+        { id: 131, part: 1, pos: "v", star: 3, en: "appeal", hint: "to A", ja: ["Aに訴える", "Aを引きつける"], phrase: "appeal to the public" },
+        { id: 132, part: 1, pos: "v", star: 2, en: "combine", hint: "A with B", ja: ["AをBと結合させる"], phrase: "combine A with B" },
+        { id: 133, part: 1, pos: "v", star: 2, en: "delay", ja: ["～を遅らせる"], phrase: "delay the flight" },
+        { id: 134, part: 1, pos: "v", star: 1, en: "repair", ja: ["～を修理する"], phrase: "repair the car" },
+        { id: 135, part: 1, pos: "v", star: 3, en: "fascinate", ja: ["～を夢中にさせる"], phrase: "be fascinated by" },
+        { id: 136, part: 1, pos: "v", star: 1, en: "pardon", ja: ["～を許す"], phrase: "beg your pardon" },
+        { id: 137, part: 1, pos: "v", star: 2, en: "import", ja: ["～を輸入する"], phrase: "import goods" },
+        { id: 138, part: 1, pos: "v", star: 3, en: "remark", ja: ["述べる"], phrase: "remark that..." },
+        { id: 139, part: 1, pos: "v", star: 2, en: "reserve", ja: ["～を予約する", "～を取っておく"], phrase: "reserve a room" },
+        { id: 140, part: 1, pos: "v", star: 2, en: "amaze", ja: ["～を驚嘆させる"], phrase: "amaze the audience" },
+        { id: 141, part: 1, pos: "v", star: 2, en: "frighten", ja: ["～をおびえさせる"], phrase: "frighten the child" },
+        { id: 142, part: 1, pos: "v", star: 3, en: "release", ja: ["～を解放する", "～を発表する"], phrase: "release the prisoner" },
+        { id: 143, part: 1, pos: "v", star: 1, en: "rent", ja: ["～を賃借りする"], phrase: "rent an apartment" },
+        { id: 144, part: 1, pos: "v", star: 2, en: "recover", hint: "from A", ja: ["Aから回復する"], phrase: "recover from illness" },
+        { id: 145, part: 1, pos: "v", star: 3, en: "suspect", hint: "A of B", ja: ["～ではないかと思う", "AにBの疑いをかける"], phrase: "suspect him of..." },
+        { id: 146, part: 1, pos: "v", star: 2, en: "deliver", ja: ["～を配達する", "渡す", "～をする"], phrase: "deliver a speech" },
+        { id: 147, part: 1, pos: "v", star: 3, en: "identify", hint: "with A", ja: ["～の正体をつきとめる", "Aと共感する"], phrase: "identify the body" },
+        { id: 148, part: 1, pos: "v", star: 3, en: "locate", ja: ["位置する"], phrase: "be located in" },
+        { id: 149, part: 1, pos: "v", star: 2, en: "manufacture", ja: ["～を製造する"], phrase: "manufacture cars" },
+        { id: 150, part: 1, pos: "v", star: 3, en: "occupy", ja: ["～を占める"], phrase: "occupy the space" },
+        { id: 151, part: 1, pos: "v", star: 2, en: "own", ja: ["～を所有している"], phrase: "own a house" },
+        { id: 152, part: 1, pos: "v", star: 3, en: "expose", hint: "A to B", ja: ["ＡをＢにさらす"], phrase: "expose A to B" },
+        { id: 153, part: 1, pos: "v", star: 2, en: "translate", hint: "A into B", ja: ["AをBに翻訳する"], phrase: "translate A into B" },
+        { id: 154, part: 1, pos: "v", star: 2, en: "cure", hint: "A of B", ja: ["AのBを治療する"], phrase: "cure him of..." },
+        { id: 155, part: 1, pos: "v", star: 3, en: "perceive", ja: ["～を知覚する"], phrase: "perceive the danger" },
+        { id: 156, part: 1, pos: "v", star: 3, en: "adjust", ja: ["～に慣れる", "調節して合わせる"], phrase: "adjust to the change" },
+        { id: 157, part: 1, pos: "v", star: 2, en: "alarm", ja: ["～をぎょっとさせる", "おびえさせる"], phrase: "be alarmed at" },
+        { id: 158, part: 1, pos: "v", star: 2, en: "assist", hint: "A in doing", ja: ["～を助ける", "Aが～するのを手伝う"], phrase: "assist him in doing" },
+        { id: 159, part: 1, pos: "v", star: 1, en: "freeze", ja: ["凍りつく"], phrase: "freeze to death" },
+        { id: 160, part: 1, pos: "v", star: 2, en: "spoil", ja: ["～を台無しにする"], phrase: "spoil the party" },
+        { id: 161, part: 1, pos: "v", star: 2, en: "shift", ja: ["～を変える"], phrase: "shift the focus" },
+        { id: 162, part: 1, pos: "v", star: 2, en: "embarrass", ja: ["～を困惑させる", "～に恥ずかしい思いをさせる"], phrase: "embarrass her" },
+        { id: 163, part: 1, pos: "v", star: 3, en: "approve", ja: ["賛成する", "～を承認する"], phrase: "approve of the plan" },
+        { id: 164, part: 1, pos: "v", star: 2, en: "weigh", ja: ["～の重さがある", "～を比較検討する", "よく考える"], phrase: "weigh 50 kilos" },
+        { id: 165, part: 1, pos: "v", star: 2, en: "stretch", ja: ["～を広げる"], phrase: "stretch the legs" },
+        { id: 166, part: 1, pos: "v", star: 3, en: "participate", hint: "in A", ja: ["Aに参加する"], phrase: "participate in..." },
+        { id: 167, part: 1, pos: "v", star: 2, en: "exhibit", ja: ["～を展示する"], phrase: "exhibit paintings" },
+        { id: 168, part: 1, pos: "v", star: 3, en: "owe", hint: "A to B", ja: ["AのことはBのおかげだ"], phrase: "owe my success to" },
+        { id: 169, part: 1, pos: "v", star: 2, en: "celebrate", ja: ["～を祝う"], phrase: "celebrate the birthday" },
+        { id: 170, part: 1, pos: "v", star: 1, en: "decorate", ja: ["～を装飾する"], phrase: "decorate the room" },
+        { id: 171, part: 1, pos: "v", star: 2, en: "forgive", hint: "A for B", ja: ["AのBを許す"], phrase: "forgive him for" },
+        { id: 172, part: 1, pos: "v", star: 1, en: "seat", ja: ["座っている"], phrase: "be seated" },
+        { id: 173, part: 1, pos: "v", star: 2, en: "injure", ja: ["～を傷つける"], phrase: "be injured in" },
+        { id: 174, part: 1, pos: "v", star: 1, en: "sew", ja: ["～を縫う"], phrase: "sew a dress" },
+        { id: 175, part: 1, pos: "n", star: 3, en: "result", ja: ["結果"], phrase: "as a result" },
+        { id: 176, part: 1, pos: "n", star: 3, en: "feature", ja: ["特徴"], phrase: "a main feature" },
+        { id: 177, part: 1, pos: "n", star: 3, en: "society", ja: ["社会", "協会", "団体"], phrase: "modern society" },
+        { id: 178, part: 1, pos: "n", star: 1, en: "wheel", ja: ["車輪", "ハンドル"], phrase: "at the wheel" },
+        { id: 179, part: 1, pos: "n", star: 3, en: "value", ja: ["価値"], phrase: "the value of education" },
+        { id: 180, part: 1, pos: "n", star: 3, en: "effect", ja: ["効果", "影響", "結果"], phrase: "have an effect on" },
+        { id: 181, part: 1, pos: "n", star: 3, en: "individual", ja: ["個人"], phrase: "an individual" },
+        { id: 182, part: 1, pos: "n", star: 3, en: "influence", ja: ["影響"], phrase: "have an influence on" },
+        { id: 183, part: 1, pos: "n", star: 2, en: "fee", ja: ["謝礼", "料金"], phrase: "pay the fee" },
+        { id: 184, part: 1, pos: "n", star: 3, en: "rate", ja: ["割合", "速度"], phrase: "at a high rate" },
+        { id: 185, part: 1, pos: "n", star: 2, en: "sign", ja: ["印", "兆候"], phrase: "a sign of spring" },
+        { id: 186, part: 1, pos: "n", star: 2, en: "service", ja: ["公共事業", "業務"], phrase: "public service" },
+        { id: 187, part: 1, pos: "n", star: 3, en: "advance", ja: ["前進", "進歩"], phrase: "in advance" },
+        { id: 188, part: 1, pos: "n", star: 1, en: "laughter", ja: ["笑い"], phrase: "burst into laughter" },
+        { id: 189, part: 1, pos: "n", star: 3, en: "material", ja: ["物質"], phrase: "raw material" },
+        { id: 190, part: 1, pos: "n", star: 2, en: "industry", ja: ["工業"], phrase: "the auto industry" },
+        { id: 191, part: 1, pos: "n", star: 3, en: "attempt", ja: ["試み"], phrase: "an attempt to do" },
+        { id: 192, part: 1, pos: "n", star: 2, en: "trade", ja: ["貿易"], phrase: "foreign trade" },
+        { id: 193, part: 1, pos: "n", star: 3, en: "progress", ja: ["進歩", "前進"], phrase: "make progress" },
+        { id: 194, part: 1, pos: "n", star: 2, en: "excuse", ja: ["言い訳"], phrase: "make an excuse" },
+        { id: 195, part: 1, pos: "n", star: 2, en: "custom", ja: ["習慣", "税関"], phrase: "social custom" },
+        { id: 196, part: 1, pos: "n", star: 3, en: "passage", ja: ["一節", "経過", "通行"], phrase: "read the passage" },
+        { id: 197, part: 1, pos: "n", star: 3, en: "economy", ja: ["経済"], phrase: "the global economy" },
+        { id: 198, part: 1, pos: "n", star: 2, en: "track", ja: ["小道", "足跡"], phrase: "keep track of" },
+        { id: 199, part: 1, pos: "n", star: 2, en: "transportation", ja: ["交通機関", "輸送"], phrase: "public transportation" },
+        { id: 200, part: 1, pos: "n", star: 2, en: "official", ja: ["役人"], phrase: "a government official" }
+    ];
+
+    let quizList = [];
+    let currentWord = {};
+    let currentIndex = 0;
+    
+    // 多義語コンボ用
+    let currentMeanings = [];
+    let currentMeaningIndex = 0;
+
+    let timerInterval;
+    const TIME_LIMIT = 8.0;
+    const FORGET_CURVE_MS = 24 * 60 * 60 * 1000;
+    
+    let sessionRecord = {};
+    let correctCount = 0;
+    let wrongWordsList = [];
+    let isRetryMode = false;
+    let selectedRange = "";
+
+    // ----------------------------------------------------------------
+    // データ管理 & メーター計算 (3層レイヤー対応)
+    // ----------------------------------------------------------------
+    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v18_record') || '{}'); }
+    
+    if(!localStorage.getItem('sistan_v18_record') && localStorage.getItem('sistan_v17_record')) {
+        localStorage.setItem('sistan_v18_record', localStorage.getItem('sistan_v17_record'));
+    }
+
+    function applyForgetCurve() {
+        let rec = getRecord();
+        let now = Date.now();
+        let updated = false;
+        for (let id in rec) {
+            if (rec[id].s === 2 && (now - rec[id].t > FORGET_CURVE_MS)) {
+                rec[id].s = -2; 
+                updated = true;
+            }
+        }
+        if (updated) localStorage.setItem('sistan_v18_record', JSON.stringify(rec));
+    }
+
+    function calculateProgress(filterFunc, targetPrefix) {
+        const rec = getRecord();
+        const targetList = masterWordList.filter(filterFunc);
+        const total = targetList.length;
+        let mastered = 0;
+        let learning = 0;
+        
+        targetList.forEach(w => {
+            let s = rec[w.id] ? rec[w.id].s : 0;
+            if (s === 2) mastered++;
+            else if (s === 1 || s === -2) learning++;
+        });
+
+        const mastPercent = total === 0 ? 0 : Math.floor((mastered / total) * 100);
+        // 学習中メーターは、修得済の上に重なるので「修得済＋学習中」の合計%まで伸ばす
+        const learnPercent = total === 0 ? 0 : Math.floor(((mastered + learning) / total) * 100);
+        
+        if (document.getElementById(`stat-${targetPrefix}-total`)) {
+            document.getElementById(`stat-${targetPrefix}-total`).textContent = total;
+            document.getElementById(`stat-${targetPrefix}-mastered`).textContent = mastered;
+            if (document.getElementById(`stat-${targetPrefix}-percent`)) {
+                document.getElementById(`stat-${targetPrefix}-percent`).textContent = mastPercent;
+            }
+            setTimeout(() => {
+                // グレーアウト層（学習中）を伸ばす
+                let learnBar = document.getElementById(`bar-learn-${targetPrefix}`);
+                if(learnBar) learnBar.style.width = learnPercent + "%";
+                // オレンジ層（修得済）を伸ばす
+                let mastBar = document.getElementById(`bar-mast-${targetPrefix}`);
+                if(mastBar) mastBar.style.width = mastPercent + "%";
+            }, 100);
+        }
+    }
+
+    function updateAllMeters() {
+        applyForgetCurve();
+        calculateProgress(() => true, 'all');
+        calculateProgress(w => w.part === 1, 'part1');
+        calculateProgress(w => w.id >= 1 && w.id <= 100, 'st1');
+        calculateProgress(w => w.id >= 101 && w.id <= 200, 'st2');
+
+        const rec = getRecord();
+        let weakCount = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1).length;
+        document.getElementById('weak-count').textContent = `(${weakCount}語)`;
+    }
+
+    window.onload = updateAllMeters;
+
+    // ----------------------------------------------------------------
+    // 画面遷移・モーダル操作
+    // ----------------------------------------------------------------
+    function showStageScreen() {
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('stage-screen').classList.remove('hidden');
+        updateAllMeters();
+    }
+    function showHomeScreen() {
+        document.getElementById('stage-screen').classList.add('hidden');
+        document.getElementById('home-screen').classList.remove('hidden');
+        updateAllMeters();
+    }
+    function openModal(range, title) {
+        selectedRange = range;
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('settings-modal').classList.remove('hidden');
+    }
+    function closeModal() {
+        document.getElementById('settings-modal').classList.add('hidden');
+    }
+
+    // ----------------------------------------------------------------
+    // クイズ開始処理
+    // ----------------------------------------------------------------
+    function startWeakQuiz() {
+        const rec = getRecord();
+        const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
+        if (weakList.length === 0) {
+            alert("素晴らしい！現在、要復習（苦手）の単語はありません。");
+            return;
+        }
+        selectedRange = 'weak';
+        setCount('all');
+    }
+
+    function setCount(count) {
+        closeModal();
+        startQuizMode(false, count);
+    }
+
+    function startQuizMode(retryMode = false, questionCount = 'all') {
+        isRetryMode = retryMode;
+        sessionRecord = {}; 
+        correctCount = 0;
+        wrongWordsList = [];
+
+        if (retryMode) {
+            quizList = [...window.lastWrongWords].sort(() => Math.random() - 0.5);
+        } else {
+            const rec = getRecord();
+            let baseList = masterWordList;
+            
+            if (selectedRange === '1-100') baseList = masterWordList.filter(w => w.id >= 1 && w.id <= 100);
+            else if (selectedRange === '101-200') baseList = masterWordList.filter(w => w.id >= 101 && w.id <= 200);
+            else if (selectedRange === 'part1') baseList = masterWordList.filter(w => w.part === 1);
+            else if (selectedRange === 'weak') baseList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
+
+            quizList = baseList.sort((a, b) => {
+                const sA = rec[a.id] ? rec[a.id].s : 0;
+                const sB = rec[b.id] ? rec[b.id].s : 0;
+                const getP = (s) => (s===-1?100 : s===-2?80 : s===1?50 : s===0?30 : 0);
+                return getP(sB) - getP(sA) || Math.random() - 0.5;
+            });
+            let limit = questionCount === "all" ? baseList.length : parseInt(questionCount);
+            quizList = quizList.slice(0, limit).sort(() => Math.random() - 0.5);
+        }
+
+        if (quizList.length === 0) {
+            alert("この範囲に該当する単語がありません。");
+            return;
+        }
+
+        currentIndex = 0;
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('stage-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        nextQuestion();
+    }
+
+    // ----------------------------------------------------------------
+    // クイズ進行ロジック（A/B構文ダミー対応）
+    // ----------------------------------------------------------------
+    function nextQuestion() {
+        if (currentIndex >= quizList.length) {
+            showResult();
+            return;
+        }
+        currentWord = quizList[currentIndex];
+        const rec = getRecord();
+        const status = rec[currentWord.id] ? rec[currentWord.id].s : 0;
+
+        document.getElementById('target-star').textContent = "★".repeat(currentWord.star) + "☆".repeat(3-currentWord.star);
+        let badge = document.getElementById('screen-badge');
+        badge.className = "badge hidden";
+        if (isRetryMode) { badge.textContent = "解き直し"; badge.className = "badge retry-badge"; }
+        else if (status === -1) { badge.textContent = "要復習"; badge.className = "badge review-badge"; }
+
+        document.getElementById('progress-text').textContent = `Q ${currentIndex+1}/${quizList.length}`;
+        
+        // ★ Hint (A/B構文) があれば表示する
+        let wordDisplay = currentWord.en;
+        if (currentWord.hint) {
+            wordDisplay += ` <span style="font-size:20px; color:#aaa;">(${currentWord.hint})</span>`;
+        }
+        document.getElementById('target-word').innerHTML = wordDisplay;
+        
+        document.getElementById('target-phrase').textContent = "";
+        document.getElementById('result-message').textContent = "";
+
+        currentMeanings = [...currentWord.ja].sort(() => Math.random() - 0.5);
+        currentMeaningIndex = 0;
+
+        showChoices();
+    }
+
+    function showChoices() {
+        const correctJa = currentMeanings[currentMeaningIndex];
+        const subInst = document.getElementById('sub-instruction');
+        
+        if (currentMeanings.length > 1) {
+            if (currentMeaningIndex === 0) {
+                subInst.textContent = `この単語は複数の意味があります！(1/${currentMeanings.length})`;
+                subInst.style.color = "var(--a-color)";
+            } else {
+                subInst.textContent = `正解！別の意味も選んでください！(${currentMeaningIndex+1}/${currentMeanings.length})`;
+                subInst.style.color = "var(--v-color)";
+            }
+        } else {
+            subInst.textContent = "";
+        }
+
+        // ★ A/Bを用いたハズレ選択肢の生成ロジック
+        let choices = [correctJa];
+        let isABFormat = correctJa.includes("A") || correctJa.includes("B");
+        
+        // 全単語の意味リストを作成（今の単語の意味は除く）
+        let allJa = masterWordList.flatMap(w => w.ja);
+        let pool = allJa.filter(j => !currentWord.ja.includes(j));
+
+        if (isABFormat) {
+            // AやBを含む意味だけを抽出
+            let abPool = pool.filter(j => j.includes("A") || j.includes("B"));
+            if (abPool.length >= 7) {
+                pool = abPool; // A/B構文が十分に足りる場合
+            } else {
+                // 足りない場合はA/B構文を優先して、残りを通常から補填
+                let nonAbPool = pool.filter(j => !j.includes("A") && !j.includes("B"));
+                pool = [...abPool, ...nonAbPool];
+            }
+        }
+
+        pool.sort(() => Math.random() - 0.5); // プールをシャッフル
+
+        for(let i=0; i<pool.length && choices.length<8; i++) {
+            if(!choices.includes(pool[i])) {
+                choices.push(pool[i]);
+            }
+        }
+        choices.sort(() => Math.random() - 0.5);
+
+        const grid = document.getElementById('choices-grid');
+        grid.innerHTML = "";
+        choices.forEach(c => {
+            const btn = document.createElement('button');
+            btn.textContent = c; btn.className = `choice-btn ${currentWord.pos}`;
+            btn.onclick = () => checkAnswer(c, correctJa);
+            grid.appendChild(btn);
+        });
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        let t = TIME_LIMIT;
+        document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`;
+        timerInterval = setInterval(() => {
+            t -= 0.1;
+            document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`;
+            if(t <= 0) { clearInterval(timerInterval); checkAnswer("TIMEOUT", ""); }
+        }, 100);
+    }
+
+    function checkAnswer(ans, cor) {
+        clearInterval(timerInterval);
+        const res = document.getElementById('result-message');
+        const grid = document.getElementById('choices-grid');
+        const mark = document.getElementById('huge-mark');
+        const phr = document.getElementById('target-phrase');
+        const subInst = document.getElementById('sub-instruction');
+        const rec = getRecord();
+
+        if (ans === cor) {
+            currentMeaningIndex++;
+            if (currentMeaningIndex < currentMeanings.length) {
+                mark.textContent = "👍"; mark.className = "show-mark";
+                setTimeout(() => { mark.className = ""; }, 300);
+                showChoices();
+            } else {
+                mark.textContent = "⭕️"; mark.className = "show-mark";
+                correctCount++;
+                
+                let currentStatus = rec[currentWord.id] ? rec[currentWord.id].s : 0;
+                let nextStatus = currentStatus;
+                if (currentStatus === -1 || currentStatus === -2 || currentStatus === 0) nextStatus = 1; 
+                else if (currentStatus === 1 || currentStatus === 2) nextStatus = 2; 
+                
+                if (!isRetryMode) sessionRecord[currentWord.id] = nextStatus;
+
+                subInst.textContent = "PERFECT!!";
+                subInst.style.color = "var(--correct)";
+                phr.textContent = currentWord.phrase;
+                
+                currentIndex++;
+                setTimeout(() => { mark.className = ""; nextQuestion(); }, 1500);
+            }
+        } else {
+            mark.textContent = "❌"; mark.className = "show-mark";
+            wrongWordsList.push(currentWord);
+            
+            if (!isRetryMode) sessionRecord[currentWord.id] = -1;
+
+            subInst.textContent = "FAILED...";
+            subInst.style.color = "var(--wrong)";
+            phr.textContent = currentWord.phrase;
+            
+            res.innerHTML = `<span style="color:var(--n-color)">正解: ${currentWord.ja.join(' / ')}</span>`;
+            grid.innerHTML = `<button class="next-btn" onclick="currentIndex++; nextQuestion();">次の問題へ</button>`;
+            setTimeout(() => { mark.className = ""; }, 500);
+        }
+    }
+
+    function showResult() {
+        if (!isRetryMode) {
+            let rec = getRecord();
+            for (let id in sessionRecord) {
+                rec[id] = { s: sessionRecord[id], t: Date.now() };
+            }
+            localStorage.setItem('sistan_v18_record', JSON.stringify(rec));
+        }
+
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('score-display').textContent = `${quizList.length}問中 ${correctCount}問完全正解！`;
+        
+        const listDiv = document.getElementById('wrong-list');
+        listDiv.innerHTML = "<strong>間違えた単語:</strong><br>";
+        
+        if (wrongWordsList.length === 0) {
+            listDiv.innerHTML += "なし！完璧です！";
+            document.getElementById('retry-wrong-btn').classList.add('hidden');
+        } else {
+            window.lastWrongWords = [...wrongWordsList];
+            wrongWordsList.forEach(w => {
+                listDiv.innerHTML += `<div><strong>${w.en}</strong>: ${w.ja.join(' / ')}</div>`;
+            });
+            document.getElementById('retry-wrong-btn').classList.remove('hidden');
+        }
+    }
+</script>
+</body>
+</html>
