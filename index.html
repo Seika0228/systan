@@ -4,34 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="apple-touch-icon" href="icon.png">
-    <title>志望校突破！シスタンマスター v19</title>
+    <title>志望校突破！シスタンマスター v20</title>
     <style>
+        /* 🎨 テーマ変数の定義 */
         :root {
+            /* デフォルト（ダーク） */
             --bg: #121212; --card: #1e1e1e; --text: #e0e0e0;
             --primary: #bb86fc; --v-color: #03dac6; --n-color: #cf6679;
             --a-color: #ffb74d; --correct: #4caf50; --wrong: #f44336;
-            --toshin-part1: #f26d7d;
-            --toshin-all: #ff9800;
+            --toshin-part1: #f26d7d; --toshin-all: #ff9800;
         }
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: var(--bg); margin: 0; padding: 10px; color: var(--text); touch-action: manipulation; }
-        .container { background: var(--card); padding: 20px 15px; border-radius: 12px; max-width: 500px; margin: auto; box-sizing: border-box; position: relative; }
-        h2 { font-size: 22px; margin-top: 5px; color: var(--primary); letter-spacing: 1px;}
         
-        .start-btn { width: 100%; background: var(--primary); color: #000; font-weight: bold; font-size: 20px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 15px; cursor: pointer;}
+        body.theme-light {
+            --bg: #f5f5f5; --card: #ffffff; --text: #222222;
+            --primary: #6200ee; --v-color: #018786; --n-color: #b00020;
+            --a-color: #e65100;
+        }
+        
+        body.theme-blue {
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
+            --primary: #38bdf8; --v-color: #34d399; --n-color: #f43f5e;
+            --a-color: #fbbf24;
+        }
+
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: var(--bg); margin: 0; padding: 10px; color: var(--text); touch-action: manipulation; transition: background 0.3s, color 0.3s;}
+        .container { background: var(--card); padding: 20px 15px; border-radius: 12px; max-width: 500px; margin: auto; box-sizing: border-box; position: relative; transition: background 0.3s;}
+        
+        /* ホーム画面ヘッダー調整 */
+        .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .home-header h2 { font-size: 22px; margin: 0; color: var(--primary); letter-spacing: 1px;}
+        .theme-btn { background: none; border: 1px solid #888; color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+
+        .start-btn { width: 100%; background: var(--primary); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); font-weight: bold; font-size: 20px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 15px; cursor: pointer;}
         .weak-btn { width: 100%; background: #444; color: #fff; font-weight: bold; font-size: 18px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border-left: 6px solid var(--n-color);}
         
         /* 東進風 UI */
         .toshin-header { background: #222; border: 1px solid #444; border-radius: 8px; padding: 15px; margin-bottom: 18px; text-align: left; display: flex; justify-content: space-between; align-items: flex-end; cursor: pointer;}
-        .toshin-header-title { font-size: 22px; font-weight: bold; letter-spacing: 2px;}
+        .toshin-header-title { font-size: 22px; font-weight: bold; letter-spacing: 2px; color:#fff;}
         .toshin-header-stats { font-size: 14px; color: #ccc; }
         .bar-bg { background: #111; height: 12px; border-radius: 6px; margin-top: 10px; position: relative; overflow: hidden; border: 1px solid #333; }
         .bar-learn { background: #666; height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s; }
         .bar-mast { height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s; }
         #bar-mast-all { background: var(--toshin-all); }
 
-        /* ★ ROUND見出しをタップ可能に調整 */
-        .toshin-part-title { background: #ddd; color: #222; font-weight: bold; font-size: 16px; padding: 10px 12px; text-align: left; margin: 15px -15px 8px -15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .toshin-part-title:active { background: #ccc; }
+        .toshin-part-title { font-weight: bold; font-size: 14px; padding: 5px 5px; text-align: left; margin: 15px 0 5px 0; color: var(--text); border-bottom: 1px solid #555; }
         
         .toshin-stage { background: #2a2a2a; border-radius: 8px; display: flex; align-items: stretch; margin-bottom: 10px; overflow: hidden; cursor: pointer; border: 1px solid #111; box-shadow: 0 2px 4px rgba(0,0,0,0.5);}
         .toshin-stage:active { transform: scale(0.98); }
@@ -65,16 +81,19 @@
         button.choice-btn.a { border-bottom: 5px solid var(--a-color); }
         button.choice-btn:active { transform: translateY(2px); box-shadow: none; }
         
-        .next-btn { grid-column: span 2; background: var(--primary); color: #000; font-weight: bold; padding: 20px; margin-top: 5px; font-size: 18px; border: none; border-radius: 10px;}
+        .next-btn { grid-column: span 2; background: var(--primary); color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,0.5); font-weight: bold; padding: 20px; margin-top: 5px; font-size: 18px; border: none; border-radius: 10px; cursor: pointer;}
         #timer-display { font-size: 18px; font-weight: bold; color: var(--n-color); margin: 8px 0; }
         .badge { padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 8px;}
         .review-badge { background: var(--n-color); color: #fff; }
         .retry-badge { background: #fff; color: #000; }
-        .result-list { text-align: left; max-height: 300px; overflow-y: auto; background: #252525; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 16px; }
-        .result-list div { margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 6px; }
+        .result-list { text-align: left; max-height: 300px; overflow-y: auto; background: #252525; color:#eee; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 16px; }
+        .result-list div { margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 6px; }
         #huge-mark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 200px; opacity: 0; pointer-events: none; z-index: 100; transition: opacity 0.1s; }
         .show-mark { opacity: 0.7 !important; }
         .hidden { display: none !important; }
+
+        /* 想起モード用ボタン */
+        .reveal-btn { grid-column: span 2; background: var(--primary); color: #fff; font-weight: bold; font-size: 20px; padding: 40px 20px; border: none; border-radius: 10px; cursor: pointer; text-shadow: 0 1px 2px rgba(0,0,0,0.5); box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
     </style>
 </head>
 <body>
@@ -82,8 +101,13 @@
 <div id="huge-mark"></div>
 
 <div class="container" id="home-screen">
-    <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v19</span></h2>
-    <p style="font-size: 13px; color: #888; margin-bottom: 25px;">限界突破！君の英単語力を極限まで高めるアプリ</p>
+    <div class="home-header">
+        <div>
+            <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v20</span></h2>
+            <div style="font-size: 11px; color: #888; text-align:left;">限界突破！英単語力を極限まで高める</div>
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()">🎨 テーマ変更</button>
+    </div>
     
     <button class="start-btn" onclick="showStageScreen()">学習を始める</button>
     <button class="weak-btn" onclick="openWeakModal()">苦手単語メニュー <span id="weak-count"></span></button>
@@ -102,8 +126,7 @@
 <div class="container hidden" id="weak-list-screen">
     <button onclick="hideWeakList()" style="background:none; border:none; color:#aaa; font-size:16px; font-weight:bold; text-align:left; width:100%; padding:10px 0; margin-bottom:10px;">＜ TOPへ戻る</button>
     <h2 style="color:var(--n-color);">苦手単語一覧</h2>
-    <div id="weak-list-content" style="text-align:left; max-height:450px; overflow-y:auto; background:#252525; padding:15px; border-radius:10px; margin-top:15px;">
-        </div>
+    <div id="weak-list-content" style="text-align:left; max-height:450px; overflow-y:auto; background:#252525; padding:15px; border-radius:10px; margin-top:15px;"></div>
 </div>
 
 <div class="container hidden" id="stage-screen">
@@ -122,9 +145,21 @@
         </div>
     </div>
 
-    <div class="toshin-part-title" onclick="openModal('part1', 'ROUND 1 (PART 1 全範囲)')">
-        <div>ROUND 1 <span style="font-size:11px; color:#666; margin-left:10px;">PART1 頻出度 ★★★</span></div>
-        <div style="font-size:12px; color:var(--n-color); font-weight:bold;">テストする ＞</div>
+    <div class="toshin-part-title">ROUND 1 <span style="font-size:11px; color:#888; margin-left:10px;">PART1 頻出度 ★★★</span></div>
+    
+    <div class="toshin-stage" onclick="openModal('part1', 'PART 1 全範囲')">
+        <div class="toshin-stage-left">PART<span>1</span></div>
+        <div class="toshin-stage-mid">
+            <div class="toshin-stage-title">No.0001 - 0600 (PART 1 全範囲)</div>
+            <div class="toshin-stage-stats">
+                <div class="stage-bar-bg">
+                    <div class="stage-bar-learn" id="bar-learn-part1"></div>
+                    <div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-part1"></div>
+                </div>
+                <span id="stat-part1-mastered">0</span> / <span id="stat-part1-total">0</span>語
+            </div>
+        </div>
+        <div class="toshin-stage-right">＞</div>
     </div>
 
     <div class="toshin-stage" onclick="openModal('1-100', 'STAGE 01 (1-100)')">
@@ -161,7 +196,12 @@
 <div id="settings-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <h3 id="modal-title" style="margin-top:0; color:var(--primary); font-size:22px;">範囲選択</h3>
-        <p style="font-size:14px; color:#ccc; margin-bottom:20px;">出題数を選んでください</p>
+        
+        <label style="color:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:15px; font-size:14px; background:#333; padding:12px; border-radius:8px; cursor:pointer;">
+            <input type="checkbox" id="hidden-mode-toggle" style="transform: scale(1.5); margin-right:10px;"> 選択肢を隠す (制限時間15秒)
+        </label>
+
+        <p style="font-size:13px; color:#ccc; margin-bottom:15px;">出題数を選んでください</p>
         <button class="modal-btn" onclick="setCount(10)">10問</button>
         <button class="modal-btn" onclick="setCount(20)">20問</button>
         <button class="modal-btn" onclick="setCount(50)">50問</button>
@@ -193,6 +233,24 @@
 </div>
 
 <script>
+    // --- 🎨 テーマ管理 ---
+    const themes = ['dark', 'light', 'blue'];
+    let currentThemeIndex = 0;
+
+    function initTheme() {
+        const savedTheme = localStorage.getItem('sistan_theme') || 'dark';
+        currentThemeIndex = themes.indexOf(savedTheme);
+        document.body.className = `theme-${savedTheme}`;
+    }
+    initTheme();
+
+    function toggleTheme() {
+        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+        const newTheme = themes[currentThemeIndex];
+        document.body.className = `theme-${newTheme}`;
+        localStorage.setItem('sistan_theme', newTheme);
+    }
+
     const masterWordList = [
         // 1-100
         { id: 1, part: 1, pos: "v", star: 3, en: "follow", ja: ["～の後に続く", "～に従う"], phrase: "follow his advice" },
@@ -407,7 +465,7 @@
     let currentMeaningIndex = 0;
 
     let timerInterval;
-    const TIME_LIMIT = 8.0;
+    let baseTimeLimit = 8.0; // ★ 想起モードで15.0になる
     const FORGET_CURVE_MS = 24 * 60 * 60 * 1000;
     
     let sessionRecord = {};
@@ -415,11 +473,16 @@
     let wrongWordsList = [];
     let isRetryMode = false;
     let selectedRange = "";
-
-    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v19_record') || '{}'); }
     
-    if(!localStorage.getItem('sistan_v19_record') && localStorage.getItem('sistan_v18_record')) {
-        localStorage.setItem('sistan_v19_record', localStorage.getItem('sistan_v18_record'));
+    // ★ 想起モードのフラグ
+    let isHiddenMode = false;
+    let isChoicesRevealed = false;
+
+    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v20_record') || '{}'); }
+    
+    // v19からの引き継ぎ
+    if(!localStorage.getItem('sistan_v20_record') && localStorage.getItem('sistan_v19_record')) {
+        localStorage.setItem('sistan_v20_record', localStorage.getItem('sistan_v19_record'));
     }
 
     function applyForgetCurve() {
@@ -432,7 +495,7 @@
                 updated = true;
             }
         }
-        if (updated) localStorage.setItem('sistan_v19_record', JSON.stringify(rec));
+        if (updated) localStorage.setItem('sistan_v20_record', JSON.stringify(rec));
     }
 
     function calculateProgress(filterFunc, targetPrefix) {
@@ -478,8 +541,7 @@
         document.getElementById('weak-count').textContent = `(${weakCount}語)`;
     }
 
-    window.onload = updateAllMeters;
-
+    // Modal / Screen controls
     function showStageScreen() {
         document.getElementById('home-screen').classList.add('hidden');
         document.getElementById('stage-screen').classList.remove('hidden');
@@ -490,8 +552,6 @@
         document.getElementById('home-screen').classList.remove('hidden');
         updateAllMeters();
     }
-    
-    // ★ モーダルと画面操作の追加
     function openModal(range, title) {
         selectedRange = range;
         document.getElementById('modal-title').textContent = title;
@@ -500,7 +560,6 @@
     function closeModal() {
         document.getElementById('settings-modal').classList.add('hidden');
     }
-
     function openWeakModal() {
         const rec = getRecord();
         const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
@@ -513,13 +572,11 @@
     function closeWeakModal() {
         document.getElementById('weak-modal').classList.add('hidden');
     }
-
     function showWeakList() {
         closeWeakModal();
         const rec = getRecord();
         const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
         const content = document.getElementById('weak-list-content');
-        
         let html = "";
         weakList.forEach(w => {
             html += `<div style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #444;">
@@ -529,7 +586,6 @@
                      </div>`;
         });
         content.innerHTML = html;
-
         document.getElementById('home-screen').classList.add('hidden');
         document.getElementById('weak-list-screen').classList.remove('hidden');
     }
@@ -538,13 +594,19 @@
         document.getElementById('home-screen').classList.remove('hidden');
     }
 
+    // Quiz Logic
     function startWeakQuiz() {
         closeWeakModal();
         selectedRange = 'weak';
+        document.getElementById('hidden-mode-toggle').checked = false; // 苦手モード時はデフォルトOFF
         setCount(100);
     }
 
     function setCount(count) {
+        // ★ 想起モードの設定を読み込む
+        isHiddenMode = document.getElementById('hidden-mode-toggle').checked;
+        baseTimeLimit = isHiddenMode ? 15.0 : 8.0;
+        
         closeModal();
         startQuizMode(false, count);
     }
@@ -596,6 +658,10 @@
             return;
         }
         currentWord = quizList[currentIndex];
+        
+        // 単語が変わるごとに、想起モードなら選択肢を隠す状態に戻す
+        isChoicesRevealed = !isHiddenMode; 
+
         const rec = getRecord();
         const status = rec[currentWord.id] ? rec[currentWord.id].s : 0;
 
@@ -622,7 +688,16 @@
         showChoices();
     }
 
+    // ★ タップして選択肢を表示させる関数
+    function revealChoices() {
+        isChoicesRevealed = true;
+        showChoices();
+    }
+
     function showChoices() {
+        const grid = document.getElementById('choices-grid');
+        grid.innerHTML = "";
+        
         const correctJa = currentMeanings[currentMeaningIndex];
         const subInst = document.getElementById('sub-instruction');
         
@@ -638,6 +713,19 @@
             subInst.textContent = "";
         }
 
+        // ★ 想起モードで、まだ選択肢を非表示にしている場合
+        if (!isChoicesRevealed) {
+            const btn = document.createElement('button');
+            btn.textContent = "タップして選択肢を表示";
+            btn.className = "reveal-btn";
+            btn.onclick = revealChoices;
+            grid.appendChild(btn);
+            
+            if (currentMeaningIndex === 0) startTimer(); // 最初の表示時のみタイマーリセット
+            return;
+        }
+
+        // 選択肢の生成
         let choices = [correctJa];
         let isABFormat = correctJa.includes("A") || correctJa.includes("B");
         
@@ -646,37 +734,30 @@
 
         if (isABFormat) {
             let abPool = pool.filter(j => j.includes("A") || j.includes("B"));
-            if (abPool.length >= 7) {
-                pool = abPool;
-            } else {
-                let nonAbPool = pool.filter(j => !j.includes("A") && !j.includes("B"));
-                pool = [...abPool, ...nonAbPool];
-            }
+            if (abPool.length >= 7) pool = abPool;
+            else pool = [...abPool, ...pool.filter(j => !j.includes("A") && !j.includes("B"))];
         }
 
         pool.sort(() => Math.random() - 0.5);
-
         for(let i=0; i<pool.length && choices.length<8; i++) {
-            if(!choices.includes(pool[i])) {
-                choices.push(pool[i]);
-            }
+            if(!choices.includes(pool[i])) choices.push(pool[i]);
         }
         choices.sort(() => Math.random() - 0.5);
 
-        const grid = document.getElementById('choices-grid');
-        grid.innerHTML = "";
         choices.forEach(c => {
             const btn = document.createElement('button');
             btn.textContent = c; btn.className = `choice-btn ${currentWord.pos}`;
             btn.onclick = () => checkAnswer(c, correctJa);
             grid.appendChild(btn);
         });
-        startTimer();
+        
+        // タイマーはコンボの最初（意味1つ目）の時だけリセットしてスタートする
+        if (currentMeaningIndex === 0) startTimer();
     }
 
     function startTimer() {
         clearInterval(timerInterval);
-        let t = TIME_LIMIT;
+        let t = baseTimeLimit;
         document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`;
         timerInterval = setInterval(() => {
             t -= 0.1;
@@ -699,7 +780,7 @@
             if (currentMeaningIndex < currentMeanings.length) {
                 mark.textContent = "👍"; mark.className = "show-mark";
                 setTimeout(() => { mark.className = ""; }, 300);
-                showChoices();
+                showChoices(); // 次の意味を選ぶ時は自動で選択肢を表示する
             } else {
                 mark.textContent = "⭕️"; mark.className = "show-mark";
                 correctCount++;
@@ -740,7 +821,7 @@
             for (let id in sessionRecord) {
                 rec[id] = { s: sessionRecord[id], t: Date.now() };
             }
-            localStorage.setItem('sistan_v19_record', JSON.stringify(rec));
+            localStorage.setItem('sistan_v20_record', JSON.stringify(rec));
         }
 
         document.getElementById('game-screen').classList.add('hidden');
