@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="apple-touch-icon" href="icon.png.jpg">
-    <title>志望校突破！シスタンマスター v20</title>
+    <title>志望校突破！シスタンマスター v21</title>
     <style>
         /* 🎨 テーマ変数の定義 */
         :root {
-            /* デフォルト（ダーク） */
             --bg: #121212; --card: #1e1e1e; --text: #e0e0e0;
             --primary: #bb86fc; --v-color: #03dac6; --n-color: #cf6679;
             --a-color: #ffb74d; --correct: #4caf50; --wrong: #f44336;
@@ -30,7 +29,6 @@
         body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: var(--bg); margin: 0; padding: 10px; color: var(--text); touch-action: manipulation; transition: background 0.3s, color 0.3s;}
         .container { background: var(--card); padding: 20px 15px; border-radius: 12px; max-width: 500px; margin: auto; box-sizing: border-box; position: relative; transition: background 0.3s;}
         
-        /* ホーム画面ヘッダー調整 */
         .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .home-header h2 { font-size: 22px; margin: 0; color: var(--primary); letter-spacing: 1px;}
         .theme-btn { background: none; border: 1px solid #888; color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
@@ -103,7 +101,7 @@
 <div class="container" id="home-screen">
     <div class="home-header">
         <div>
-            <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v20</span></h2>
+            <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v21</span></h2>
             <div style="font-size: 11px; color: #888; text-align:left;">限界突破！英単語力を極限まで高める</div>
         </div>
         <button class="theme-btn" onclick="toggleTheme()">🎨 テーマ変更</button>
@@ -465,7 +463,7 @@
     let currentMeaningIndex = 0;
 
     let timerInterval;
-    let baseTimeLimit = 8.0; // ★ 想起モードで15.0になる
+    let baseTimeLimit = 8.0; 
     const FORGET_CURVE_MS = 24 * 60 * 60 * 1000;
     
     let sessionRecord = {};
@@ -474,15 +472,14 @@
     let isRetryMode = false;
     let selectedRange = "";
     
-    // ★ 想起モードのフラグ
     let isHiddenMode = false;
     let isChoicesRevealed = false;
 
-    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v20_record') || '{}'); }
+    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v21_record') || '{}'); }
     
-    // v19からの引き継ぎ
-    if(!localStorage.getItem('sistan_v20_record') && localStorage.getItem('sistan_v19_record')) {
-        localStorage.setItem('sistan_v20_record', localStorage.getItem('sistan_v19_record'));
+    // v20からの引き継ぎ
+    if(!localStorage.getItem('sistan_v21_record') && localStorage.getItem('sistan_v20_record')) {
+        localStorage.setItem('sistan_v21_record', localStorage.getItem('sistan_v20_record'));
     }
 
     function applyForgetCurve() {
@@ -495,7 +492,7 @@
                 updated = true;
             }
         }
-        if (updated) localStorage.setItem('sistan_v20_record', JSON.stringify(rec));
+        if (updated) localStorage.setItem('sistan_v21_record', JSON.stringify(rec));
     }
 
     function calculateProgress(filterFunc, targetPrefix) {
@@ -598,12 +595,11 @@
     function startWeakQuiz() {
         closeWeakModal();
         selectedRange = 'weak';
-        document.getElementById('hidden-mode-toggle').checked = false; // 苦手モード時はデフォルトOFF
+        document.getElementById('hidden-mode-toggle').checked = false; 
         setCount(100);
     }
 
     function setCount(count) {
-        // ★ 想起モードの設定を読み込む
         isHiddenMode = document.getElementById('hidden-mode-toggle').checked;
         baseTimeLimit = isHiddenMode ? 15.0 : 8.0;
         
@@ -659,7 +655,6 @@
         }
         currentWord = quizList[currentIndex];
         
-        // 単語が変わるごとに、想起モードなら選択肢を隠す状態に戻す
         isChoicesRevealed = !isHiddenMode; 
 
         const rec = getRecord();
@@ -685,16 +680,17 @@
         currentMeanings = [...currentWord.ja].sort(() => Math.random() - 0.5);
         currentMeaningIndex = 0;
 
-        showChoices();
+        // 次の問題（コンボの1発目）なのでタイマーをリセットしてスタート
+        showChoices(true);
     }
 
-    // ★ タップして選択肢を表示させる関数
     function revealChoices() {
         isChoicesRevealed = true;
-        showChoices();
+        // 想起モードで「タップして表示」した瞬間はタイマーをリセットしない（継続）
+        showChoices(false);
     }
 
-    function showChoices() {
+    function showChoices(resetTimer = true) {
         const grid = document.getElementById('choices-grid');
         grid.innerHTML = "";
         
@@ -713,7 +709,6 @@
             subInst.textContent = "";
         }
 
-        // ★ 想起モードで、まだ選択肢を非表示にしている場合
         if (!isChoicesRevealed) {
             const btn = document.createElement('button');
             btn.textContent = "タップして選択肢を表示";
@@ -721,11 +716,11 @@
             btn.onclick = revealChoices;
             grid.appendChild(btn);
             
-            if (currentMeaningIndex === 0) startTimer(); // 最初の表示時のみタイマーリセット
+            if (resetTimer) startTimer(); 
             return;
         }
 
-        // 選択肢の生成
+        // ★ A/B構文の完全分離ロジック
         let choices = [correctJa];
         let isABFormat = correctJa.includes("A") || correctJa.includes("B");
         
@@ -733,9 +728,18 @@
         let pool = allJa.filter(j => !currentWord.ja.includes(j));
 
         if (isABFormat) {
+            // A/Bが含まれる問題：ハズレもA/Bが含まれるものだけにする
             let abPool = pool.filter(j => j.includes("A") || j.includes("B"));
-            if (abPool.length >= 7) pool = abPool;
-            else pool = [...abPool, ...pool.filter(j => !j.includes("A") && !j.includes("B"))];
+            if (abPool.length >= 7) {
+                pool = abPool;
+            } else {
+                // 万が一足りない場合の保険（現在のリストなら足りるはずです）
+                let nonAbPool = pool.filter(j => !j.includes("A") && !j.includes("B"));
+                pool = [...abPool, ...nonAbPool];
+            }
+        } else {
+            // A/Bが含まれない通常問題：ハズレにA/Bを含むものを絶対に出さない
+            pool = pool.filter(j => !j.includes("A") && !j.includes("B"));
         }
 
         pool.sort(() => Math.random() - 0.5);
@@ -751,8 +755,7 @@
             grid.appendChild(btn);
         });
         
-        // タイマーはコンボの最初（意味1つ目）の時だけリセットしてスタートする
-        if (currentMeaningIndex === 0) startTimer();
+        if (resetTimer) startTimer();
     }
 
     function startTimer() {
@@ -780,7 +783,9 @@
             if (currentMeaningIndex < currentMeanings.length) {
                 mark.textContent = "👍"; mark.className = "show-mark";
                 setTimeout(() => { mark.className = ""; }, 300);
-                showChoices(); // 次の意味を選ぶ時は自動で選択肢を表示する
+                
+                // ★ 多義語の2つ目の意味へ移る時、タイマーをリセットしてスタートする！
+                showChoices(true); 
             } else {
                 mark.textContent = "⭕️"; mark.className = "show-mark";
                 correctCount++;
@@ -821,7 +826,7 @@
             for (let id in sessionRecord) {
                 rec[id] = { s: sessionRecord[id], t: Date.now() };
             }
-            localStorage.setItem('sistan_v20_record', JSON.stringify(rec));
+            localStorage.setItem('sistan_v21_record', JSON.stringify(rec));
         }
 
         document.getElementById('game-screen').classList.add('hidden');
