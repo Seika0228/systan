@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <link rel="apple-touch-icon" href="icon.png.jpg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>志望校突破！シスタンマスター v18</title>
+    <link rel="apple-touch-icon" href="icon.png">
+    <title>志望校突破！シスタンマスター v19</title>
     <style>
         :root {
             --bg: #121212; --card: #1e1e1e; --text: #e0e0e0;
@@ -20,17 +20,18 @@
         .start-btn { width: 100%; background: var(--primary); color: #000; font-weight: bold; font-size: 20px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 15px; cursor: pointer;}
         .weak-btn { width: 100%; background: #444; color: #fff; font-weight: bold; font-size: 18px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border-left: 6px solid var(--n-color);}
         
-        /* 東進風 UI (視認性向上) */
+        /* 東進風 UI */
         .toshin-header { background: #222; border: 1px solid #444; border-radius: 8px; padding: 15px; margin-bottom: 18px; text-align: left; display: flex; justify-content: space-between; align-items: flex-end; cursor: pointer;}
         .toshin-header-title { font-size: 22px; font-weight: bold; letter-spacing: 2px;}
         .toshin-header-stats { font-size: 14px; color: #ccc; }
-        /* 3層メーターのベース */
         .bar-bg { background: #111; height: 12px; border-radius: 6px; margin-top: 10px; position: relative; overflow: hidden; border: 1px solid #333; }
         .bar-learn { background: #666; height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s; }
         .bar-mast { height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s; }
         #bar-mast-all { background: var(--toshin-all); }
 
-        .toshin-part-title { background: #ddd; color: #222; font-weight: bold; font-size: 16px; padding: 8px 12px; text-align: left; margin: 15px -15px 8px -15px; }
+        /* ★ ROUND見出しをタップ可能に調整 */
+        .toshin-part-title { background: #ddd; color: #222; font-weight: bold; font-size: 16px; padding: 10px 12px; text-align: left; margin: 15px -15px 8px -15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .toshin-part-title:active { background: #ccc; }
         
         .toshin-stage { background: #2a2a2a; border-radius: 8px; display: flex; align-items: stretch; margin-bottom: 10px; overflow: hidden; cursor: pointer; border: 1px solid #111; box-shadow: 0 2px 4px rgba(0,0,0,0.5);}
         .toshin-stage:active { transform: scale(0.98); }
@@ -57,7 +58,6 @@
         #sub-instruction { font-size: 14px; font-weight: bold; margin-bottom: 10px; min-height: 20px; }
         .phrase { font-size: 22px; color: #ffeb3b; font-weight: bold; margin-bottom: 15px; min-height: 30px; }
         
-        /* 縦長2列レイアウト (ボタン巨大化) */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         button.choice-btn { padding: 20px 8px; font-size: 14px; font-weight: bold; border: none; border-radius: 10px; background: #333; color: #fff; cursor: pointer; line-height: 1.4; word-break: keep-all; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
         button.choice-btn.v { border-bottom: 5px solid var(--v-color); }
@@ -82,11 +82,28 @@
 <div id="huge-mark"></div>
 
 <div class="container" id="home-screen">
-    <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v18</span></h2>
-    <p style="font-size: 13px; color: #888; margin-bottom: 25px;">頑張ろう</p>
+    <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v19</span></h2>
+    <p style="font-size: 13px; color: #888; margin-bottom: 25px;">限界突破！君の英単語力を極限まで高めるアプリ</p>
     
     <button class="start-btn" onclick="showStageScreen()">学習を始める</button>
-    <button class="weak-btn" onclick="startWeakQuiz()">苦手単語を解き直す <span id="weak-count"></span></button>
+    <button class="weak-btn" onclick="openWeakModal()">苦手単語メニュー <span id="weak-count"></span></button>
+</div>
+
+<div id="weak-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h3 style="margin-top:0; color:var(--n-color); font-size:22px;">苦手単語メニュー</h3>
+        <p style="font-size:14px; color:#ccc; margin-bottom:20px;">現在要復習の単語に対してどうしますか？</p>
+        <button class="modal-btn" style="background:var(--primary); color:#000;" onclick="startWeakQuiz()">解き直す (テスト)</button>
+        <button class="modal-btn" onclick="showWeakList()">一覧を見る</button>
+        <button class="modal-btn" style="background:none; border:2px solid #666; margin-top:15px;" onclick="closeWeakModal()">キャンセル</button>
+    </div>
+</div>
+
+<div class="container hidden" id="weak-list-screen">
+    <button onclick="hideWeakList()" style="background:none; border:none; color:#aaa; font-size:16px; font-weight:bold; text-align:left; width:100%; padding:10px 0; margin-bottom:10px;">＜ TOPへ戻る</button>
+    <h2 style="color:var(--n-color);">苦手単語一覧</h2>
+    <div id="weak-list-content" style="text-align:left; max-height:450px; overflow-y:auto; background:#252525; padding:15px; border-radius:10px; margin-top:15px;">
+        </div>
 </div>
 
 <div class="container hidden" id="stage-screen">
@@ -105,21 +122,9 @@
         </div>
     </div>
 
-    <div class="toshin-part-title">ROUND 1 <span style="font-size:11px; color:#666; margin-left:10px;">PART1 頻出度 ★★★</span></div>
-    
-    <div class="toshin-stage" onclick="openModal('part1', 'PART 1 全範囲')">
-        <div class="toshin-stage-left">PART<span>1</span></div>
-        <div class="toshin-stage-mid">
-            <div class="toshin-stage-title">No.0001 - 0600 (PART 1)</div>
-            <div class="toshin-stage-stats">
-                <div class="stage-bar-bg">
-                    <div class="stage-bar-learn" id="bar-learn-part1"></div>
-                    <div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-part1"></div>
-                </div>
-                <span id="stat-part1-mastered">0</span> / <span id="stat-part1-total">0</span>語
-            </div>
-        </div>
-        <div class="toshin-stage-right">＞</div>
+    <div class="toshin-part-title" onclick="openModal('part1', 'ROUND 1 (PART 1 全範囲)')">
+        <div>ROUND 1 <span style="font-size:11px; color:#666; margin-left:10px;">PART1 頻出度 ★★★</span></div>
+        <div style="font-size:12px; color:var(--n-color); font-weight:bold;">テストする ＞</div>
     </div>
 
     <div class="toshin-stage" onclick="openModal('1-100', 'STAGE 01 (1-100)')">
@@ -160,7 +165,7 @@
         <button class="modal-btn" onclick="setCount(10)">10問</button>
         <button class="modal-btn" onclick="setCount(20)">20問</button>
         <button class="modal-btn" onclick="setCount(50)">50問</button>
-        <button class="modal-btn" onclick="setCount('all')">全問</button>
+        <button class="modal-btn" onclick="setCount(100)">100問</button>
         <button class="modal-btn" style="background:none; border:2px solid #666; margin-top:15px;" onclick="closeModal()">キャンセル</button>
     </div>
 </div>
@@ -188,9 +193,6 @@
 </div>
 
 <script>
-    // ----------------------------------------------------------------
-    // 単語データ（★ A/B構文用 hint 追加！）
-    // ----------------------------------------------------------------
     const masterWordList = [
         // 1-100
         { id: 1, part: 1, pos: "v", star: 3, en: "follow", ja: ["～の後に続く", "～に従う"], phrase: "follow his advice" },
@@ -401,7 +403,6 @@
     let currentWord = {};
     let currentIndex = 0;
     
-    // 多義語コンボ用
     let currentMeanings = [];
     let currentMeaningIndex = 0;
 
@@ -415,13 +416,10 @@
     let isRetryMode = false;
     let selectedRange = "";
 
-    // ----------------------------------------------------------------
-    // データ管理 & メーター計算 (3層レイヤー対応)
-    // ----------------------------------------------------------------
-    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v18_record') || '{}'); }
+    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v19_record') || '{}'); }
     
-    if(!localStorage.getItem('sistan_v18_record') && localStorage.getItem('sistan_v17_record')) {
-        localStorage.setItem('sistan_v18_record', localStorage.getItem('sistan_v17_record'));
+    if(!localStorage.getItem('sistan_v19_record') && localStorage.getItem('sistan_v18_record')) {
+        localStorage.setItem('sistan_v19_record', localStorage.getItem('sistan_v18_record'));
     }
 
     function applyForgetCurve() {
@@ -434,7 +432,7 @@
                 updated = true;
             }
         }
-        if (updated) localStorage.setItem('sistan_v18_record', JSON.stringify(rec));
+        if (updated) localStorage.setItem('sistan_v19_record', JSON.stringify(rec));
     }
 
     function calculateProgress(filterFunc, targetPrefix) {
@@ -451,7 +449,6 @@
         });
 
         const mastPercent = total === 0 ? 0 : Math.floor((mastered / total) * 100);
-        // 学習中メーターは、修得済の上に重なるので「修得済＋学習中」の合計%まで伸ばす
         const learnPercent = total === 0 ? 0 : Math.floor(((mastered + learning) / total) * 100);
         
         if (document.getElementById(`stat-${targetPrefix}-total`)) {
@@ -461,10 +458,8 @@
                 document.getElementById(`stat-${targetPrefix}-percent`).textContent = mastPercent;
             }
             setTimeout(() => {
-                // グレーアウト層（学習中）を伸ばす
                 let learnBar = document.getElementById(`bar-learn-${targetPrefix}`);
                 if(learnBar) learnBar.style.width = learnPercent + "%";
-                // オレンジ層（修得済）を伸ばす
                 let mastBar = document.getElementById(`bar-mast-${targetPrefix}`);
                 if(mastBar) mastBar.style.width = mastPercent + "%";
             }, 100);
@@ -485,9 +480,6 @@
 
     window.onload = updateAllMeters;
 
-    // ----------------------------------------------------------------
-    // 画面遷移・モーダル操作
-    // ----------------------------------------------------------------
     function showStageScreen() {
         document.getElementById('home-screen').classList.add('hidden');
         document.getElementById('stage-screen').classList.remove('hidden');
@@ -498,6 +490,8 @@
         document.getElementById('home-screen').classList.remove('hidden');
         updateAllMeters();
     }
+    
+    // ★ モーダルと画面操作の追加
     function openModal(range, title) {
         selectedRange = range;
         document.getElementById('modal-title').textContent = title;
@@ -507,18 +501,47 @@
         document.getElementById('settings-modal').classList.add('hidden');
     }
 
-    // ----------------------------------------------------------------
-    // クイズ開始処理
-    // ----------------------------------------------------------------
-    function startWeakQuiz() {
+    function openWeakModal() {
         const rec = getRecord();
         const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
         if (weakList.length === 0) {
             alert("素晴らしい！現在、要復習（苦手）の単語はありません。");
             return;
         }
+        document.getElementById('weak-modal').classList.remove('hidden');
+    }
+    function closeWeakModal() {
+        document.getElementById('weak-modal').classList.add('hidden');
+    }
+
+    function showWeakList() {
+        closeWeakModal();
+        const rec = getRecord();
+        const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
+        const content = document.getElementById('weak-list-content');
+        
+        let html = "";
+        weakList.forEach(w => {
+            html += `<div style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #444;">
+                        <strong style="color:var(--primary); font-size:20px;">${w.en}</strong> 
+                        <span style="font-size:14px; color:#ccc; margin-left:10px;">${w.ja.join(' / ')}</span>
+                        <div style="font-size:14px; color:var(--a-color); margin-top:5px; font-weight:bold;">${w.phrase}</div>
+                     </div>`;
+        });
+        content.innerHTML = html;
+
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('weak-list-screen').classList.remove('hidden');
+    }
+    function hideWeakList() {
+        document.getElementById('weak-list-screen').classList.add('hidden');
+        document.getElementById('home-screen').classList.remove('hidden');
+    }
+
+    function startWeakQuiz() {
+        closeWeakModal();
         selectedRange = 'weak';
-        setCount('all');
+        setCount(100);
     }
 
     function setCount(count) {
@@ -526,7 +549,7 @@
         startQuizMode(false, count);
     }
 
-    function startQuizMode(retryMode = false, questionCount = 'all') {
+    function startQuizMode(retryMode = false, questionCount = 100) {
         isRetryMode = retryMode;
         sessionRecord = {}; 
         correctCount = 0;
@@ -550,6 +573,7 @@
                 return getP(sB) - getP(sA) || Math.random() - 0.5;
             });
             let limit = questionCount === "all" ? baseList.length : parseInt(questionCount);
+            if(limit > baseList.length) limit = baseList.length;
             quizList = quizList.slice(0, limit).sort(() => Math.random() - 0.5);
         }
 
@@ -566,9 +590,6 @@
         nextQuestion();
     }
 
-    // ----------------------------------------------------------------
-    // クイズ進行ロジック（A/B構文ダミー対応）
-    // ----------------------------------------------------------------
     function nextQuestion() {
         if (currentIndex >= quizList.length) {
             showResult();
@@ -586,7 +607,6 @@
 
         document.getElementById('progress-text').textContent = `Q ${currentIndex+1}/${quizList.length}`;
         
-        // ★ Hint (A/B構文) があれば表示する
         let wordDisplay = currentWord.en;
         if (currentWord.hint) {
             wordDisplay += ` <span style="font-size:20px; color:#aaa;">(${currentWord.hint})</span>`;
@@ -618,27 +638,23 @@
             subInst.textContent = "";
         }
 
-        // ★ A/Bを用いたハズレ選択肢の生成ロジック
         let choices = [correctJa];
         let isABFormat = correctJa.includes("A") || correctJa.includes("B");
         
-        // 全単語の意味リストを作成（今の単語の意味は除く）
         let allJa = masterWordList.flatMap(w => w.ja);
         let pool = allJa.filter(j => !currentWord.ja.includes(j));
 
         if (isABFormat) {
-            // AやBを含む意味だけを抽出
             let abPool = pool.filter(j => j.includes("A") || j.includes("B"));
             if (abPool.length >= 7) {
-                pool = abPool; // A/B構文が十分に足りる場合
+                pool = abPool;
             } else {
-                // 足りない場合はA/B構文を優先して、残りを通常から補填
                 let nonAbPool = pool.filter(j => !j.includes("A") && !j.includes("B"));
                 pool = [...abPool, ...nonAbPool];
             }
         }
 
-        pool.sort(() => Math.random() - 0.5); // プールをシャッフル
+        pool.sort(() => Math.random() - 0.5);
 
         for(let i=0; i<pool.length && choices.length<8; i++) {
             if(!choices.includes(pool[i])) {
@@ -724,7 +740,7 @@
             for (let id in sessionRecord) {
                 rec[id] = { s: sessionRecord[id], t: Date.now() };
             }
-            localStorage.setItem('sistan_v18_record', JSON.stringify(rec));
+            localStorage.setItem('sistan_v19_record', JSON.stringify(rec));
         }
 
         document.getElementById('game-screen').classList.add('hidden');
