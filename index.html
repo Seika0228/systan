@@ -4,39 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="apple-touch-icon" href="icon.png">
-    <title>志望校突破！シスタンマスター v22</title>
+    <title>志望校突破！シスタンマスター v23</title>
     <style>
-        /* 🎨 テーマ変数の定義 */
         :root {
             --bg: #121212; --card: #1e1e1e; --text: #e0e0e0;
             --primary: #bb86fc; --v-color: #03dac6; --n-color: #cf6679;
             --a-color: #ffb74d; --correct: #4caf50; --wrong: #f44336;
             --toshin-part1: #f26d7d; --toshin-all: #ff9800;
         }
-        
         body.theme-light {
             --bg: #f5f5f5; --card: #ffffff; --text: #222222;
             --primary: #6200ee; --v-color: #018786; --n-color: #b00020;
             --a-color: #e65100;
         }
-        
         body.theme-blue {
             --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
             --primary: #38bdf8; --v-color: #34d399; --n-color: #f43f5e;
             --a-color: #fbbf24;
         }
-
         body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: var(--bg); margin: 0; padding: 10px; color: var(--text); touch-action: manipulation; transition: background 0.3s, color 0.3s;}
         .container { background: var(--card); padding: 20px 15px; border-radius: 12px; max-width: 500px; margin: auto; box-sizing: border-box; position: relative; transition: background 0.3s;}
-        
         .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .home-header h2 { font-size: 22px; margin: 0; color: var(--primary); letter-spacing: 1px;}
         .theme-btn { background: none; border: 1px solid #888; color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-
         .start-btn { width: 100%; background: var(--primary); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); font-weight: bold; font-size: 20px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 15px; cursor: pointer;}
         .weak-btn { width: 100%; background: #444; color: #fff; font-weight: bold; font-size: 18px; padding: 18px; border: none; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border-left: 6px solid var(--n-color);}
-        
-        /* 東進風 UI - 全範囲 */
         .toshin-header { background: #222; border: 1px solid #444; border-radius: 8px; padding: 15px; margin-bottom: 18px; text-align: left; display: flex; justify-content: space-between; align-items: flex-end; cursor: pointer;}
         .toshin-header-title { font-size: 22px; font-weight: bold; letter-spacing: 2px; color:#fff;}
         .toshin-header-stats { font-size: 14px; color: #ccc; }
@@ -44,10 +36,7 @@
         .bar-learn { background: #666; height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s; }
         .bar-mast { height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s; }
         #bar-mast-all { background: var(--toshin-all); }
-
         .toshin-part-title { font-weight: bold; font-size: 14px; padding: 5px 5px; text-align: left; margin: 15px 0 5px 0; color: var(--text); border-bottom: 1px solid #555; }
-        
-        /* ★ v22 新設：PART専用の特別デザイン（大ボス感） */
         .toshin-part-card { background: linear-gradient(135deg, #3a1c20, #1a1a1a); border-radius: 10px; display: flex; align-items: stretch; margin-bottom: 15px; overflow: hidden; cursor: pointer; border: 1px solid var(--toshin-part1); box-shadow: 0 4px 10px rgba(242, 109, 125, 0.2);}
         .toshin-part-card:active { transform: scale(0.98); }
         .toshin-part-left { background: var(--toshin-part1); color: #000; padding: 15px 10px; display: flex; flex-direction: column; justify-content: center; width: 65px; font-weight: bold; font-size: 14px; text-align: center; }
@@ -56,8 +45,6 @@
         .toshin-part-title-text { font-size: 18px; font-weight: bold; color: #fff; margin-bottom: 8px; text-shadow: 0 1px 2px rgba(0,0,0,0.8);}
         .toshin-part-stats { font-size: 14px; color: #ddd; display: flex; align-items: center;}
         .toshin-part-right { background: rgba(242, 109, 125, 0.15); color: var(--toshin-part1); width: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; border-left: 1px solid rgba(242, 109, 125, 0.3); }
-
-        /* 通常のSTAGEデザイン（小ボス感） */
         .toshin-stage { background: #2a2a2a; border-radius: 8px; display: flex; align-items: stretch; margin-bottom: 10px; overflow: hidden; cursor: pointer; border: 1px solid #111; box-shadow: 0 2px 4px rgba(0,0,0,0.5);}
         .toshin-stage:active { transform: scale(0.98); }
         .toshin-stage-left { background: #1a1a1a; color: var(--toshin-part1); padding: 12px; display: flex; flex-direction: column; justify-content: center; width: 60px; font-weight: bold; font-size: 14px; text-align: center; border-right: 1px solid #333;}
@@ -65,30 +52,23 @@
         .toshin-stage-mid { flex-grow: 1; padding: 12px; text-align: left; }
         .toshin-stage-title { font-size: 16px; font-weight: bold; color: var(--toshin-part1); margin-bottom: 8px;}
         .toshin-stage-stats { font-size: 13px; color: #ccc; display: flex; align-items: center;}
-        
         .stage-bar-bg { background: #111; height: 10px; width: 70px; border-radius: 5px; position: relative; overflow: hidden; margin-right: 10px; display: inline-block;}
         .stage-bar-learn { background: #666; height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s;}
         .stage-bar-mast { background: var(--toshin-part1); height: 100%; width: 0%; position: absolute; left: 0; transition: width 0.5s;}
         .toshin-stage-right { background: var(--toshin-part1); color: #000; width: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; }
-
-        /* モーダル */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 50; }
         .modal-content { background: var(--card); padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; }
         .modal-btn { width: 100%; background: #333; color: #fff; padding: 15px; margin-bottom: 10px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; }
-
-        /* テスト画面用スタイル */
         .star-rating { color: #f1c40f; font-size: 18px; margin-bottom: 5px; letter-spacing: 3px; }
         .word { font-size: 38px; font-weight: bold; color: var(--primary); margin: 5px 0; min-height: 45px; }
         #sub-instruction { font-size: 14px; font-weight: bold; margin-bottom: 10px; min-height: 20px; }
         .phrase { font-size: 22px; color: #ffeb3b; font-weight: bold; margin-bottom: 15px; min-height: 30px; }
-        
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         button.choice-btn { padding: 20px 8px; font-size: 14px; font-weight: bold; border: none; border-radius: 10px; background: #333; color: #fff; cursor: pointer; line-height: 1.4; word-break: keep-all; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
         button.choice-btn.v { border-bottom: 5px solid var(--v-color); }
         button.choice-btn.n { border-bottom: 5px solid var(--n-color); }
         button.choice-btn.a { border-bottom: 5px solid var(--a-color); }
         button.choice-btn:active { transform: translateY(2px); box-shadow: none; }
-        
         .next-btn { grid-column: span 2; background: var(--primary); color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,0.5); font-weight: bold; padding: 20px; margin-top: 5px; font-size: 18px; border: none; border-radius: 10px; cursor: pointer;}
         #timer-display { font-size: 18px; font-weight: bold; color: var(--n-color); margin: 8px 0; }
         .badge { padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 8px;}
@@ -99,116 +79,99 @@
         #huge-mark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 200px; opacity: 0; pointer-events: none; z-index: 100; transition: opacity 0.1s; }
         .show-mark { opacity: 0.7 !important; }
         .hidden { display: none !important; }
-
-        /* 想起モード用ボタン */
         .reveal-btn { grid-column: span 2; background: var(--primary); color: #fff; font-weight: bold; font-size: 20px; padding: 40px 20px; border: none; border-radius: 10px; cursor: pointer; text-shadow: 0 1px 2px rgba(0,0,0,0.5); box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
     </style>
 </head>
 <body>
-
 <div id="huge-mark"></div>
-
 <div class="container" id="home-screen">
     <div class="home-header">
         <div>
-            <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v22</span></h2>
+            <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v23</span></h2>
             <div style="font-size: 11px; color: #888; text-align:left;">限界突破！英単語力を極限まで高める</div>
         </div>
         <button class="theme-btn" onclick="toggleTheme()">🎨 テーマ変更</button>
     </div>
-    
     <button class="start-btn" onclick="showStageScreen()">学習を始める</button>
     <button class="weak-btn" onclick="openWeakModal()">苦手単語メニュー <span id="weak-count"></span></button>
 </div>
-
 <div id="weak-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <h3 style="margin-top:0; color:var(--n-color); font-size:22px;">苦手単語メニュー</h3>
-        <p style="font-size:14px; color:#ccc; margin-bottom:20px;">現在要復習の単語に対してどうしますか？</p>
+        <p style="font-size:14px; color:#ccc; margin-bottom:20px;">要復習の単語に対してどうしますか？</p>
         <button class="modal-btn" style="background:var(--primary); color:#000;" onclick="startWeakQuiz()">解き直す (テスト)</button>
         <button class="modal-btn" onclick="showWeakList()">一覧を見る</button>
         <button class="modal-btn" style="background:none; border:2px solid #666; margin-top:15px;" onclick="closeWeakModal()">キャンセル</button>
     </div>
 </div>
-
 <div class="container hidden" id="weak-list-screen">
     <button onclick="hideWeakList()" style="background:none; border:none; color:#aaa; font-size:16px; font-weight:bold; text-align:left; width:100%; padding:10px 0; margin-bottom:10px;">＜ TOPへ戻る</button>
     <h2 style="color:var(--n-color);">苦手単語一覧</h2>
     <div id="weak-list-content" style="text-align:left; max-height:450px; overflow-y:auto; background:#252525; padding:15px; border-radius:10px; margin-top:15px;"></div>
 </div>
-
 <div class="container hidden" id="stage-screen">
     <button onclick="showHomeScreen()" style="background:none; border:none; color:#aaa; font-size:16px; font-weight:bold; text-align:left; width:100%; padding:10px 0; margin-bottom:10px;">＜ TOPへ戻る</button>
-    
     <div class="toshin-header" onclick="openModal('all', '全範囲')">
         <div style="flex-grow: 1;">
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
                 <span class="toshin-header-title">全範囲</span>
                 <span class="toshin-header-stats">修得：<span id="stat-all-mastered">0</span> / <span id="stat-all-total">0</span> 語 (<span id="stat-all-percent">0</span>%)</span>
             </div>
-            <div class="bar-bg">
-                <div class="bar-learn" id="bar-learn-all"></div>
-                <div class="bar-mast" id="bar-mast-all"></div>
-            </div>
+            <div class="bar-bg"><div class="bar-learn" id="bar-learn-all"></div><div class="bar-mast" id="bar-mast-all"></div></div>
         </div>
     </div>
-
     <div class="toshin-part-title">ROUND 1 <span style="font-size:11px; color:#888; margin-left:10px;">PART1 頻出度 ★★★</span></div>
-    
-    <div class="toshin-part-card" onclick="openModal('part1', 'PART 1 全範囲')">
+    <div class="toshin-part-card" onclick="openModal('part1', 'PART 1')">
         <div class="toshin-part-left">PART<span>1</span></div>
         <div class="toshin-part-mid">
             <div class="toshin-part-title-text">No.0001 - 0600</div>
             <div class="toshin-part-stats">
-                <div class="stage-bar-bg" style="width:100px; height:12px;">
-                    <div class="stage-bar-learn" id="bar-learn-part1"></div>
-                    <div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-part1"></div>
-                </div>
+                <div class="stage-bar-bg" style="width:100px; height:12px;"><div class="stage-bar-learn" id="bar-learn-part1"></div><div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-part1"></div></div>
                 <span id="stat-part1-mastered">0</span> / <span id="stat-part1-total">0</span>語
             </div>
         </div>
         <div class="toshin-part-right">＞</div>
     </div>
-
-    <div class="toshin-stage" onclick="openModal('1-100', 'STAGE 01 (1-100)')">
+    <div class="toshin-stage" onclick="openModal('1-100', 'STAGE 01')">
         <div class="toshin-stage-left">STAGE<span>01</span></div>
         <div class="toshin-stage-mid">
             <div class="toshin-stage-title">No.0001 - 0100</div>
             <div class="toshin-stage-stats">
-                <div class="stage-bar-bg">
-                    <div class="stage-bar-learn" id="bar-learn-st1"></div>
-                    <div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st1"></div>
-                </div>
+                <div class="stage-bar-bg"><div class="stage-bar-learn" id="bar-learn-st1"></div><div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st1"></div></div>
                 <span id="stat-st1-mastered">0</span> / <span id="stat-st1-total">0</span>語
             </div>
         </div>
         <div class="toshin-stage-right">＞</div>
     </div>
-    
-    <div class="toshin-stage" onclick="openModal('101-200', 'STAGE 02 (101-200)')">
+    <div class="toshin-stage" onclick="openModal('101-200', 'STAGE 02')">
         <div class="toshin-stage-left">STAGE<span>02</span></div>
         <div class="toshin-stage-mid">
             <div class="toshin-stage-title">No.0101 - 0200</div>
             <div class="toshin-stage-stats">
-                <div class="stage-bar-bg">
-                    <div class="stage-bar-learn" id="bar-learn-st2"></div>
-                    <div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st2"></div>
-                </div>
+                <div class="stage-bar-bg"><div class="stage-bar-learn" id="bar-learn-st2"></div><div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st2"></div></div>
                 <span id="stat-st2-mastered">0</span> / <span id="stat-st2-total">0</span>語
             </div>
         </div>
         <div class="toshin-stage-right">＞</div>
     </div>
+    <div class="toshin-stage" onclick="openModal('201-300', 'STAGE 03')">
+        <div class="toshin-stage-left">STAGE<span>03</span></div>
+        <div class="toshin-stage-mid">
+            <div class="toshin-stage-title">No.0201 - 0300</div>
+            <div class="toshin-stage-stats">
+                <div class="stage-bar-bg"><div class="stage-bar-learn" id="bar-learn-st3"></div><div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st3"></div></div>
+                <span id="stat-st3-mastered">0</span> / <span id="stat-st3-total">0</span>語
+            </div>
+        </div>
+        <div class="toshin-stage-right">＞</div>
+    </div>
 </div>
-
 <div id="settings-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <h3 id="modal-title" style="margin-top:0; color:var(--primary); font-size:22px;">範囲選択</h3>
-        
         <label style="color:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:15px; font-size:14px; background:#333; padding:12px; border-radius:8px; cursor:pointer;">
-            <input type="checkbox" id="hidden-mode-toggle" style="transform: scale(1.5); margin-right:10px;"> 選択肢を隠す (制限時間15秒)
+            <input type="checkbox" id="hidden-mode-toggle" style="transform: scale(1.5); margin-right:10px;"> 選択肢を隠す (想起モード)
         </label>
-
         <p style="font-size:13px; color:#ccc; margin-bottom:15px;">出題数を選んでください</p>
         <button class="modal-btn" onclick="setCount(10)">10問</button>
         <button class="modal-btn" onclick="setCount(20)">20問</button>
@@ -217,7 +180,6 @@
         <button class="modal-btn" style="background:none; border:2px solid #666; margin-top:15px;" onclick="closeModal()">キャンセル</button>
     </div>
 </div>
-
 <div class="container hidden" id="game-screen">
     <div id="progress" style="font-size: 14px; font-weight:bold; margin-bottom: 5px; display:flex; justify-content:center; align-items:center;">
         <span id="progress-text"></span><span id="screen-badge"></span>
@@ -231,7 +193,6 @@
     <div id="result-message" style="margin-top: 15px; min-height: 25px; font-size: 18px;"></div>
     <button onclick="location.reload()" style="background: none; border: none; color: #888; text-decoration: underline; margin-top: 20px; font-size: 14px;">QUIT（記録せず中断）</button>
 </div>
-
 <div class="container hidden" id="result-screen">
     <h2 id="result-title" style="font-size: 26px;">結果発表</h2>
     <div id="score-display" style="font-size: 28px; font-weight: bold; margin: 15px 0;"></div>
@@ -239,19 +200,15 @@
     <button id="retry-wrong-btn" class="start-btn hidden" onclick="startQuizMode(true)">間違えた問題だけ解き直し</button>
     <button class="start-btn" style="background:#444; color:#fff;" onclick="location.reload()">HOMEに戻る</button>
 </div>
-
 <script>
-    // --- 🎨 テーマ管理 ---
     const themes = ['dark', 'light', 'blue'];
     let currentThemeIndex = 0;
-
     function initTheme() {
         const savedTheme = localStorage.getItem('sistan_theme') || 'dark';
         currentThemeIndex = themes.indexOf(savedTheme);
         document.body.className = `theme-${savedTheme}`;
     }
     initTheme();
-
     function toggleTheme() {
         currentThemeIndex = (currentThemeIndex + 1) % themes.length;
         const newTheme = themes[currentThemeIndex];
@@ -260,7 +217,7 @@
     }
 
     const masterWordList = [
-        // 1-100
+        // 1-100 (省略表示...データは全て保持しています)
         { id: 1, part: 1, pos: "v", star: 3, en: "follow", ja: ["～の後に続く", "～に従う"], phrase: "follow his advice" },
         { id: 2, part: 1, pos: "v", star: 3, en: "consider", ja: ["～を考慮する"], phrase: "consider the problem" },
         { id: 3, part: 1, pos: "v", star: 2, en: "increase", ja: ["増える", "～を増やす"], phrase: "increase by 20%" },
@@ -462,34 +419,130 @@
         { id: 197, part: 1, pos: "n", star: 3, en: "economy", ja: ["経済"], phrase: "the global economy" },
         { id: 198, part: 1, pos: "n", star: 2, en: "track", ja: ["小道", "足跡"], phrase: "keep track of" },
         { id: 199, part: 1, pos: "n", star: 2, en: "transportation", ja: ["交通機関", "輸送"], phrase: "public transportation" },
-        { id: 200, part: 1, pos: "n", star: 2, en: "official", ja: ["役人"], phrase: "a government official" }
+        { id: 200, part: 1, pos: "n", star: 2, en: "official", ja: ["役人"], phrase: "a government official" },
+
+        // 201-300 (New!)
+        { id: 201, part: 1, pos: "n", star: 3, en: "sight", ja: ["見ること", "光景", "視力"], phrase: "at first sight" },
+        { id: 202, part: 1, pos: "n", star: 3, en: "taste", ja: ["味", "好み"], phrase: "a taste for music" },
+        { id: 203, part: 1, pos: "n", star: 2, en: "range", ja: ["範囲"], phrase: "a wide range of" },
+        { id: 204, part: 1, pos: "n", star: 2, en: "appointment", ja: ["約束", "予約"], phrase: "make an appointment" },
+        { id: 205, part: 1, pos: "n", star: 3, en: "patient", ja: ["患者", "忍耐強い"], phrase: "a cancer patient" },
+        { id: 206, part: 1, pos: "n", star: 2, en: "project", ja: ["計画"], phrase: "a research project" },
+        { id: 207, part: 1, pos: "n", star: 2, en: "favor", ja: ["好意"], phrase: "do me a favor" },
+        { id: 208, part: 1, pos: "n", star: 3, en: "appearance", ja: ["外見", "様子", "出現"], phrase: "judge by appearance" },
+        { id: 209, part: 1, pos: "n", star: 3, en: "risk", ja: ["危険"], phrase: "take a risk" },
+        { id: 210, part: 1, pos: "n", star: 3, en: "benefit", ja: ["利益"], phrase: "benefit from it" },
+        { id: 211, part: 1, pos: "n", star: 2, en: "resident", ja: ["住民"], phrase: "local residents" },
+        { id: 212, part: 1, pos: "n", star: 2, en: "relative", ja: ["親族", "親戚"], phrase: "a close relative" },
+        { id: 213, part: 1, pos: "n", star: 3, en: "region", ja: ["地域"], phrase: "in the region" },
+        { id: 214, part: 1, pos: "n", star: 3, en: "characteristic", ja: ["特徴"], phrase: "a characteristic feature" },
+        { id: 215, part: 1, pos: "n", star: 3, en: "pain", ja: ["苦痛"], phrase: "feel pain" },
+        { id: 216, part: 1, pos: "n", star: 1, en: "twin", ja: ["双子の一方", "双生児"], phrase: "identical twins" },
+        { id: 217, part: 1, pos: "n", star: 3, en: "occasion", ja: ["場合", "機会"], phrase: "on this occasion" },
+        { id: 218, part: 1, pos: "n", star: 3, en: "principle", ja: ["原理", "原則"], phrase: "the principle of" },
+        { id: 219, part: 1, pos: "n", star: 2, en: "department", ja: ["部門", "学科"], phrase: "the sales department" },
+        { id: 220, part: 1, pos: "n", star: 2, en: "duty", ja: ["義務", "関税"], phrase: "sense of duty" },
+        { id: 221, part: 1, pos: "n", star: 3, en: "scene", ja: ["場面", "現場"], phrase: "the scene of the accident" },
+        { id: 222, part: 1, pos: "n", star: 1, en: "jam", ja: ["渋滞"], phrase: "traffic jam" },
+        { id: 223, part: 1, pos: "n", star: 3, en: "spirit", ja: ["精神"], phrase: "team spirit" },
+        { id: 224, part: 1, pos: "n", star: 3, en: "medium", ja: ["手段"], phrase: "a medium of communication" },
+        { id: 225, part: 1, pos: "n", star: 2, en: "mass", ja: ["一般大衆", "多くの"], phrase: "the masses" },
+        { id: 226, part: 1, pos: "n", star: 3, en: "audience", ja: ["聴衆", "観客"], phrase: "a large audience" },
+        { id: 227, part: 1, pos: "n", star: 2, en: "element", ja: ["要素", "元素"], phrase: "an essential element" },
+        { id: 228, part: 1, pos: "n", star: 3, en: "climate", ja: ["気候"], phrase: "global climate" },
+        { id: 229, part: 1, pos: "n", star: 3, en: "revolution", ja: ["革命"], phrase: "industrial revolution" },
+        { id: 230, part: 1, pos: "n", star: 2, en: "quarter", ja: ["4分の1"], phrase: "three quarters" },
+        { id: 231, part: 1, pos: "n", star: 1, en: "furniture", ja: ["家具"], phrase: "a piece of furniture" },
+        { id: 232, part: 1, pos: "n", star: 3, en: "brain", ja: ["脳"], phrase: "human brain" },
+        { id: 233, part: 1, pos: "n", star: 3, en: "atmosphere", ja: ["大気", "雰囲気"], phrase: "friendly atmosphere" },
+        { id: 234, part: 1, pos: "n", star: 3, en: "property", ja: ["財産"], phrase: "private property" },
+        { id: 235, part: 1, pos: "n", star: 2, en: "reward", ja: ["報酬"], phrase: "as a reward" },
+        { id: 236, part: 1, pos: "n", star: 2, en: "security", ja: ["安全"], phrase: "national security" },
+        { id: 237, part: 1, pos: "n", star: 2, en: "delight", ja: ["大喜び"], phrase: "to my delight" },
+        { id: 238, part: 1, pos: "n", star: 2, en: "desert", ja: ["砂漠"], phrase: "in the desert" },
+        { id: 239, part: 1, pos: "n", star: 2, en: "background", ja: ["背景", "生い立ち", "経歴"], phrase: "family background" },
+        { id: 240, part: 1, pos: "n", star: 2, en: "trend", ja: ["傾向"], phrase: "recent trend" },
+        { id: 241, part: 1, pos: "n", star: 2, en: "vote", ja: ["投票"], phrase: "cast a vote" },
+        { id: 242, part: 1, pos: "n", star: 3, en: "impact", hint: "on A", ja: ["Aへの影響", "衝撃"], phrase: "impact on society" },
+        { id: 243, part: 1, pos: "n", star: 3, en: "institution", ja: ["機関", "制度"], phrase: "educational institution" },
+        { id: 244, part: 1, pos: "n", star: 3, en: "interaction", hint: "with A", ja: ["Aとの交流"], phrase: "interaction with others" },
+        { id: 245, part: 1, pos: "n", star: 3, en: "alternative", ja: ["代わりのもの"], phrase: "have no alternative" },
+        { id: 246, part: 1, pos: "n", star: 3, en: "harm", ja: ["害"], phrase: "do more harm than good" },
+        { id: 247, part: 1, pos: "n", star: 2, en: "agency", ja: ["機関", "代理店"], phrase: "advertising agency" },
+        { id: 248, part: 1, pos: "n", star: 3, en: "capacity", ja: ["能力"], phrase: "intellectual capacity" },
+        { id: 249, part: 1, pos: "n", star: 2, en: "minister", ja: ["大臣"], phrase: "prime minister" },
+        { id: 250, part: 1, pos: "n", star: 1, en: "volunteer", ja: ["ボランティア"], phrase: "a volunteer group" },
+        { id: 251, part: 1, pos: "n", star: 3, en: "access", hint: "to A", ja: ["Aを利用する権利"], phrase: "have access to information" },
+        { id: 252, part: 1, pos: "n", star: 2, en: "quantity", ja: ["量"], phrase: "quality and quantity" },
+        { id: 253, part: 1, pos: "n", star: 2, en: "branch", ja: ["枝", "支店", "部門"], phrase: "a local branch" },
+        { id: 254, part: 1, pos: "a", star: 3, en: "common", ja: ["共通の", "普通の"], phrase: "common sense" },
+        { id: 255, part: 1, pos: "a", star: 2, en: "rough", ja: ["荒い", "大雑把な"], phrase: "a rough sketch" },
+        { id: 256, part: 1, pos: "a", star: 3, en: "likely", hint: "to do", ja: ["～する可能性が高い", "ありそうな"], phrase: "be likely to happen" },
+        { id: 257, part: 1, pos: "a", star: 3, en: "serious", ja: ["深刻な"], phrase: "a serious problem" },
+        { id: 258, part: 1, pos: "a", star: 3, en: "particular", ja: ["ある特定の", "特有の"], phrase: "in particular" },
+        { id: 259, part: 1, pos: "a", star: 3, en: "available", ja: ["手に入る", "利用できる"], phrase: "available information" },
+        { id: 260, part: 1, pos: "a", star: 1, en: "bilingual", ja: ["二言語使用の"], phrase: "a bilingual speaker" },
+        { id: 261, part: 1, pos: "a", star: 2, en: "ready", hint: "for A", ja: ["Aの用意ができた"], phrase: "get ready for school" },
+        { id: 262, part: 1, pos: "a", star: 2, en: "correct", ja: ["正しい"], phrase: "the correct answer" },
+        { id: 263, part: 1, pos: "a", star: 3, en: "familiar", hint: "with A", ja: ["Aを熟知している", "詳しい"], phrase: "be familiar with the city" },
+        { id: 264, part: 1, pos: "a", star: 3, en: "physical", ja: ["身体の", "肉体の"], phrase: "physical exercise" },
+        { id: 265, part: 1, pos: "a", star: 3, en: "worth", hint: "doing", ja: ["～する価値がある"], phrase: "be worth reading" },
+        { id: 266, part: 1, pos: "a", star: 3, en: "involved", hint: "in A", ja: ["Aに関係している", "参加している"], phrase: "be involved in the project" },
+        { id: 267, part: 1, pos: "a", star: 2, en: "fantastic", ja: ["すばらしい"], phrase: "a fantastic experience" },
+        { id: 268, part: 1, pos: "a", star: 3, en: "private", ja: ["個人の", "私的な"], phrase: "private life" },
+        { id: 269, part: 1, pos: "a", star: 3, en: "obvious", ja: ["明白な"], phrase: "it is obvious that..." },
+        { id: 270, part: 1, pos: "a", star: 3, en: "native", ja: ["母国の"], phrase: "native language" },
+        { id: 271, part: 1, pos: "a", star: 3, en: "complex", ja: ["複雑な"], phrase: "a complex system" },
+        { id: 272, part: 1, pos: "a", star: 2, en: "willing", hint: "to do", ja: ["～する気がある", "かまわない"], phrase: "be willing to help" },
+        { id: 273, part: 1, pos: "a", star: 3, en: "current", ja: ["最新の"], phrase: "the current situation" },
+        { id: 274, part: 1, pos: "a", star: 2, en: "male", ja: ["男の"], phrase: "a male student" },
+        { id: 275, part: 1, pos: "a", star: 3, en: "proper", ja: ["適切な"], phrase: "the proper way" },
+        { id: 276, part: 1, pos: "a", star: 3, en: "capable", hint: "of doing", ja: ["～する能力がある"], phrase: "be capable of winning" },
+        { id: 277, part: 1, pos: "a", star: 3, en: "independent", hint: "of A", ja: ["Aから独立した"], phrase: "be independent of parents" },
+        { id: 278, part: 1, pos: "a", star: 2, en: "positive", ja: ["積極的な"], phrase: "positive thinking" },
+        { id: 279, part: 1, pos: "a", star: 2, en: "pleasant", ja: ["楽しい"], phrase: "a pleasant memory" },
+        { id: 280, part: 1, pos: "a", star: 3, en: "significant", ja: ["重要な"], phrase: "a significant change" },
+        { id: 281, part: 1, pos: "a", star: 2, en: "former", ja: ["前の"], phrase: "the former president" },
+        { id: 282, part: 1, pos: "a", star: 2, en: "chemical", ja: ["化学的な"], phrase: "a chemical reaction" },
+        { id: 283, part: 1, pos: "a", star: 2, en: "upset", ja: ["動揺している"], phrase: "be upset by the news" },
+        { id: 284, part: 1, pos: "a", star: 3, en: "previous", ja: ["前の"], phrase: "previous experience" },
+        { id: 285, part: 1, pos: "a", star: 2, en: "calm", ja: ["冷静な"], phrase: "keep calm" },
+        { id: 286, part: 1, pos: "a", star: 3, en: "specific", ja: ["特定の"], phrase: "a specific purpose" },
+        { id: 287, part: 1, pos: "a", star: 3, en: "conscious", hint: "of A", ja: ["Aを意識している"], phrase: "be conscious of danger" },
+        { id: 288, part: 1, pos: "a", star: 3, en: "superior", hint: "to A", ja: ["Aよりすぐれている"], phrase: "be superior to others" },
+        { id: 289, part: 1, pos: "a", star: 3, en: "efficient", ja: ["効率がいい"], phrase: "an efficient method" },
+        { id: 290, part: 1, pos: "a", star: 3, en: "fundamental", ja: ["基本的な"], phrase: "fundamental rights" },
+        { id: 291, part: 1, pos: "a", star: 2, en: "narrow", ja: ["狭い"], phrase: "a narrow road" },
+        { id: 292, part: 1, pos: "a", star: 3, en: "reasonable", ja: ["理にかなった"], phrase: "a reasonable price" },
+        { id: 293, part: 1, pos: "a", star: 2, en: "nervous", ja: ["神経質な", "不安な"], phrase: "get nervous" },
+        { id: 294, part: 1, pos: "a", star: 2, en: "alike", ja: ["似ている"], phrase: "look alike" },
+        { id: 295, part: 1, pos: "a", star: 3, en: "domestic", ja: ["家庭の", "国内の"], phrase: "domestic violence" },
+        { id: 296, part: 1, pos: "a", star: 2, en: "negative", ja: ["否定の"], phrase: "a negative answer" },
+        { id: 297, part: 1, pos: "a", star: 3, en: "moral", ja: ["道徳的な"], phrase: "moral standards" },
+        { id: 298, part: 1, pos: "a", star: 2, en: "eager", hint: "to do", ja: ["～することを熱望している"], phrase: "be eager to learn" },
+        { id: 299, part: 1, pos: "a", star: 3, en: "remarkable", ja: ["すばらしい"], phrase: "a remarkable progress" },
+        { id: 300, part: 1, pos: "a", star: 2, en: "evil", ja: ["悪い"], phrase: "an evil spirit" }
     ];
 
     let quizList = [];
     let currentWord = {};
     let currentIndex = 0;
-    
     let currentMeanings = [];
     let currentMeaningIndex = 0;
-
     let timerInterval;
     let baseTimeLimit = 8.0; 
     const FORGET_CURVE_MS = 24 * 60 * 60 * 1000;
-    
     let sessionRecord = {};
     let correctCount = 0;
     let wrongWordsList = [];
     let isRetryMode = false;
     let selectedRange = "";
-    
     let isHiddenMode = false;
     let isChoicesRevealed = false;
 
-    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v22_record') || '{}'); }
-    
-    // v21からの引き継ぎ
-    if(!localStorage.getItem('sistan_v22_record') && localStorage.getItem('sistan_v21_record')) {
-        localStorage.setItem('sistan_v22_record', localStorage.getItem('sistan_v21_record'));
+    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v23_record') || '{}'); }
+    if(!localStorage.getItem('sistan_v23_record') && localStorage.getItem('sistan_v22_record')) {
+        localStorage.setItem('sistan_v23_record', localStorage.getItem('sistan_v22_record'));
     }
 
     function applyForgetCurve() {
@@ -498,40 +551,30 @@
         let updated = false;
         for (let id in rec) {
             if (rec[id].s === 2 && (now - rec[id].t > FORGET_CURVE_MS)) {
-                rec[id].s = -2; 
-                updated = true;
+                rec[id].s = -2; updated = true;
             }
         }
-        if (updated) localStorage.setItem('sistan_v22_record', JSON.stringify(rec));
+        if (updated) localStorage.setItem('sistan_v23_record', JSON.stringify(rec));
     }
 
     function calculateProgress(filterFunc, targetPrefix) {
         const rec = getRecord();
         const targetList = masterWordList.filter(filterFunc);
         const total = targetList.length;
-        let mastered = 0;
-        let learning = 0;
-        
+        let mastered = 0; let learning = 0;
         targetList.forEach(w => {
             let s = rec[w.id] ? rec[w.id].s : 0;
-            if (s === 2) mastered++;
-            else if (s === 1 || s === -2) learning++;
+            if (s === 2) mastered++; else if (s === 1 || s === -2) learning++;
         });
-
         const mastPercent = total === 0 ? 0 : Math.floor((mastered / total) * 100);
         const learnPercent = total === 0 ? 0 : Math.floor(((mastered + learning) / total) * 100);
-        
         if (document.getElementById(`stat-${targetPrefix}-total`)) {
             document.getElementById(`stat-${targetPrefix}-total`).textContent = total;
             document.getElementById(`stat-${targetPrefix}-mastered`).textContent = mastered;
-            if (document.getElementById(`stat-${targetPrefix}-percent`)) {
-                document.getElementById(`stat-${targetPrefix}-percent`).textContent = mastPercent;
-            }
+            if (document.getElementById(`stat-${targetPrefix}-percent`)) document.getElementById(`stat-${targetPrefix}-percent`).textContent = mastPercent;
             setTimeout(() => {
-                let learnBar = document.getElementById(`bar-learn-${targetPrefix}`);
-                if(learnBar) learnBar.style.width = learnPercent + "%";
-                let mastBar = document.getElementById(`bar-mast-${targetPrefix}`);
-                if(mastBar) mastBar.style.width = mastPercent + "%";
+                let lb = document.getElementById(`bar-learn-${targetPrefix}`); if(lb) lb.style.width = learnPercent + "%";
+                let mb = document.getElementById(`bar-mast-${targetPrefix}`); if(mb) mb.style.width = mastPercent + "%";
             }, 100);
         }
     }
@@ -542,312 +585,143 @@
         calculateProgress(w => w.part === 1, 'part1');
         calculateProgress(w => w.id >= 1 && w.id <= 100, 'st1');
         calculateProgress(w => w.id >= 101 && w.id <= 200, 'st2');
-
+        calculateProgress(w => w.id >= 201 && w.id <= 300, 'st3');
         const rec = getRecord();
         let weakCount = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1).length;
         document.getElementById('weak-count').textContent = `(${weakCount}語)`;
     }
+    window.onload = updateAllMeters;
 
-    // Modal / Screen controls
-    function showStageScreen() {
-        document.getElementById('home-screen').classList.add('hidden');
-        document.getElementById('stage-screen').classList.remove('hidden');
-        updateAllMeters();
-    }
-    function showHomeScreen() {
-        document.getElementById('stage-screen').classList.add('hidden');
-        document.getElementById('home-screen').classList.remove('hidden');
-        updateAllMeters();
-    }
-    function openModal(range, title) {
-        selectedRange = range;
-        document.getElementById('modal-title').textContent = title;
-        document.getElementById('settings-modal').classList.remove('hidden');
-    }
-    function closeModal() {
-        document.getElementById('settings-modal').classList.add('hidden');
-    }
+    function showStageScreen() { document.getElementById('home-screen').classList.add('hidden'); document.getElementById('stage-screen').classList.remove('hidden'); updateAllMeters(); }
+    function showHomeScreen() { document.getElementById('stage-screen').classList.add('hidden'); document.getElementById('home-screen').classList.remove('hidden'); updateAllMeters(); }
+    function openModal(range, title) { selectedRange = range; document.getElementById('modal-title').textContent = title; document.getElementById('settings-modal').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('settings-modal').classList.add('hidden'); }
     function openWeakModal() {
-        const rec = getRecord();
-        const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
-        if (weakList.length === 0) {
-            alert("素晴らしい！現在、要復習（苦手）の単語はありません。");
-            return;
-        }
+        const rec = getRecord(); if (masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1).length === 0) { alert("現在、要復習の単語はありません。"); return; }
         document.getElementById('weak-modal').classList.remove('hidden');
     }
-    function closeWeakModal() {
-        document.getElementById('weak-modal').classList.add('hidden');
-    }
+    function closeWeakModal() { document.getElementById('weak-modal').classList.add('hidden'); }
     function showWeakList() {
-        closeWeakModal();
-        const rec = getRecord();
-        const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
+        closeWeakModal(); const rec = getRecord(); const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
         const content = document.getElementById('weak-list-content');
         let html = "";
         weakList.forEach(w => {
-            html += `<div style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #444;">
-                        <strong style="color:var(--primary); font-size:20px;">${w.en}</strong> 
-                        <span style="font-size:14px; color:#ccc; margin-left:10px;">${w.ja.join(' / ')}</span>
-                        <div style="font-size:14px; color:var(--a-color); margin-top:5px; font-weight:bold;">${w.phrase}</div>
-                     </div>`;
+            html += `<div style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #444;"><strong style="color:var(--primary); font-size:20px;">${w.en}</strong><span style="font-size:14px; color:#ccc; margin-left:10px;">${w.ja.join(' / ')}</span><div style="font-size:14px; color:var(--a-color); margin-top:5px; font-weight:bold;">${w.phrase}</div></div>`;
         });
-        content.innerHTML = html;
-        document.getElementById('home-screen').classList.add('hidden');
-        document.getElementById('weak-list-screen').classList.remove('hidden');
+        content.innerHTML = html; document.getElementById('home-screen').classList.add('hidden'); document.getElementById('weak-list-screen').classList.remove('hidden');
     }
-    function hideWeakList() {
-        document.getElementById('weak-list-screen').classList.add('hidden');
-        document.getElementById('home-screen').classList.remove('hidden');
-    }
-
-    // Quiz Logic
-    function startWeakQuiz() {
-        closeWeakModal();
-        selectedRange = 'weak';
-        document.getElementById('hidden-mode-toggle').checked = false; 
-        setCount(100);
-    }
-
-    function setCount(count) {
-        isHiddenMode = document.getElementById('hidden-mode-toggle').checked;
-        baseTimeLimit = isHiddenMode ? 15.0 : 8.0;
-        
-        closeModal();
-        startQuizMode(false, count);
-    }
+    function hideWeakList() { document.getElementById('weak-list-screen').classList.add('hidden'); document.getElementById('home-screen').classList.remove('hidden'); }
+    function startWeakQuiz() { closeWeakModal(); selectedRange = 'weak'; document.getElementById('hidden-mode-toggle').checked = false; setCount(100); }
+    function setCount(count) { isHiddenMode = document.getElementById('hidden-mode-toggle').checked; baseTimeLimit = isHiddenMode ? 15.0 : 8.0; closeModal(); startQuizMode(false, count); }
 
     function startQuizMode(retryMode = false, questionCount = 100) {
-        isRetryMode = retryMode;
-        sessionRecord = {}; 
-        correctCount = 0;
-        wrongWordsList = [];
-
-        if (retryMode) {
-            quizList = [...window.lastWrongWords].sort(() => Math.random() - 0.5);
-        } else {
-            const rec = getRecord();
-            let baseList = masterWordList;
-            
+        isRetryMode = retryMode; sessionRecord = {}; correctCount = 0; wrongWordsList = [];
+        if (retryMode) { quizList = [...window.lastWrongWords].sort(() => Math.random() - 0.5); } else {
+            const rec = getRecord(); let baseList = masterWordList;
             if (selectedRange === '1-100') baseList = masterWordList.filter(w => w.id >= 1 && w.id <= 100);
             else if (selectedRange === '101-200') baseList = masterWordList.filter(w => w.id >= 101 && w.id <= 200);
+            else if (selectedRange === '201-300') baseList = masterWordList.filter(w => w.id >= 201 && w.id <= 300);
             else if (selectedRange === 'part1') baseList = masterWordList.filter(w => w.part === 1);
             else if (selectedRange === 'weak') baseList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
-
             quizList = baseList.sort((a, b) => {
-                const sA = rec[a.id] ? rec[a.id].s : 0;
-                const sB = rec[b.id] ? rec[b.id].s : 0;
+                const sA = rec[a.id] ? rec[a.id].s : 0; const sB = rec[b.id] ? rec[b.id].s : 0;
                 const getP = (s) => (s===-1?100 : s===-2?80 : s===1?50 : s===0?30 : 0);
                 return getP(sB) - getP(sA) || Math.random() - 0.5;
             });
-            let limit = questionCount === "all" ? baseList.length : parseInt(questionCount);
-            if(limit > baseList.length) limit = baseList.length;
+            let limit = parseInt(questionCount); if(limit > baseList.length) limit = baseList.length;
             quizList = quizList.slice(0, limit).sort(() => Math.random() - 0.5);
         }
-
-        if (quizList.length === 0) {
-            alert("この範囲に該当する単語がありません。");
-            return;
-        }
-
-        currentIndex = 0;
-        document.getElementById('home-screen').classList.add('hidden');
-        document.getElementById('stage-screen').classList.add('hidden');
-        document.getElementById('result-screen').classList.add('hidden');
-        document.getElementById('game-screen').classList.remove('hidden');
+        if (quizList.length === 0) { alert("該当する単語がありません。"); return; }
+        currentIndex = 0; document.getElementById('home-screen').classList.add('hidden'); document.getElementById('stage-screen').classList.add('hidden'); document.getElementById('result-screen').classList.add('hidden'); document.getElementById('game-screen').classList.remove('hidden');
         nextQuestion();
     }
 
     function nextQuestion() {
-        if (currentIndex >= quizList.length) {
-            showResult();
-            return;
-        }
-        currentWord = quizList[currentIndex];
-        
-        isChoicesRevealed = !isHiddenMode; 
-
-        const rec = getRecord();
-        const status = rec[currentWord.id] ? rec[currentWord.id].s : 0;
-
+        if (currentIndex >= quizList.length) { showResult(); return; }
+        currentWord = quizList[currentIndex]; isChoicesRevealed = !isHiddenMode;
+        const rec = getRecord(); const status = rec[currentWord.id] ? rec[currentWord.id].s : 0;
         document.getElementById('target-star').textContent = "★".repeat(currentWord.star) + "☆".repeat(3-currentWord.star);
-        let badge = document.getElementById('screen-badge');
-        badge.className = "badge hidden";
-        if (isRetryMode) { badge.textContent = "解き直し"; badge.className = "badge retry-badge"; }
-        else if (status === -1) { badge.textContent = "要復習"; badge.className = "badge review-badge"; }
-
+        let badge = document.getElementById('screen-badge'); badge.className = "badge hidden";
+        if (isRetryMode) { badge.textContent = "解き直し"; badge.className = "badge retry-badge"; } else if (status === -1) { badge.textContent = "要復習"; badge.className = "badge review-badge"; }
         document.getElementById('progress-text').textContent = `Q ${currentIndex+1}/${quizList.length}`;
-        
-        let wordDisplay = currentWord.en;
-        if (currentWord.hint) {
-            wordDisplay += ` <span style="font-size:20px; color:#aaa;">(${currentWord.hint})</span>`;
-        }
+        let wordDisplay = currentWord.en; if (currentWord.hint) wordDisplay += ` <span style="font-size:20px; color:#aaa;">(${currentWord.hint})</span>`;
         document.getElementById('target-word').innerHTML = wordDisplay;
-        
-        document.getElementById('target-phrase').textContent = "";
-        document.getElementById('result-message').textContent = "";
-
-        currentMeanings = [...currentWord.ja].sort(() => Math.random() - 0.5);
-        currentMeaningIndex = 0;
-
+        document.getElementById('target-phrase').textContent = ""; document.getElementById('result-message').textContent = "";
+        currentMeanings = [...currentWord.ja].sort(() => Math.random() - 0.5); currentMeaningIndex = 0;
         showChoices(true);
     }
 
-    function revealChoices() {
-        isChoicesRevealed = true;
-        showChoices(false);
-    }
+    function revealChoices() { isChoicesRevealed = true; showChoices(false); }
 
     function showChoices(resetTimer = true) {
-        const grid = document.getElementById('choices-grid');
-        grid.innerHTML = "";
-        
-        const correctJa = currentMeanings[currentMeaningIndex];
-        const subInst = document.getElementById('sub-instruction');
-        
+        const grid = document.getElementById('choices-grid'); grid.innerHTML = "";
+        const correctJa = currentMeanings[currentMeaningIndex]; const subInst = document.getElementById('sub-instruction');
         if (currentMeanings.length > 1) {
-            if (currentMeaningIndex === 0) {
-                subInst.textContent = `この単語は複数の意味があります！(1/${currentMeanings.length})`;
-                subInst.style.color = "var(--a-color)";
-            } else {
-                subInst.textContent = `正解！別の意味も選んでください！(${currentMeaningIndex+1}/${currentMeanings.length})`;
-                subInst.style.color = "var(--v-color)";
-            }
-        } else {
-            subInst.textContent = "";
-        }
-
+            subInst.textContent = currentMeaningIndex === 0 ? `複数の意味があります！(1/${currentMeanings.length})` : `正解！別の意味も！(${currentMeaningIndex+1}/${currentMeanings.length})`;
+            subInst.style.color = currentMeaningIndex === 0 ? "var(--a-color)" : "var(--v-color)";
+        } else { subInst.textContent = ""; }
         if (!isChoicesRevealed) {
-            const btn = document.createElement('button');
-            btn.textContent = "タップして選択肢を表示";
-            btn.className = "reveal-btn";
-            btn.onclick = revealChoices;
-            grid.appendChild(btn);
-            
-            if (resetTimer) startTimer(); 
-            return;
+            const btn = document.createElement('button'); btn.textContent = "タップして選択肢を表示"; btn.className = "reveal-btn"; btn.onclick = revealChoices; grid.appendChild(btn);
+            if (resetTimer) startTimer(); return;
         }
-
-        let choices = [correctJa];
-        let isABFormat = correctJa.includes("A") || correctJa.includes("B");
-        
-        let allJa = masterWordList.flatMap(w => w.ja);
-        let pool = allJa.filter(j => !currentWord.ja.includes(j));
-
-        if (isABFormat) {
+        let choices = [correctJa]; let isAB = correctJa.includes("A") || correctJa.includes("B");
+        let pool = masterWordList.flatMap(w => w.ja).filter(j => !currentWord.ja.includes(j));
+        if (isAB) {
             let abPool = pool.filter(j => j.includes("A") || j.includes("B"));
-            if (abPool.length >= 7) {
-                pool = abPool;
-            } else {
-                let nonAbPool = pool.filter(j => !j.includes("A") && !j.includes("B"));
-                pool = [...abPool, ...nonAbPool];
-            }
-        } else {
-            pool = pool.filter(j => !j.includes("A") && !j.includes("B"));
-        }
-
+            pool = abPool.length >= 7 ? abPool : [...abPool, ...pool.filter(j => !j.includes("A") && !j.includes("B"))];
+        } else { pool = pool.filter(j => !j.includes("A") && !j.includes("B")); }
         pool.sort(() => Math.random() - 0.5);
-        for(let i=0; i<pool.length && choices.length<8; i++) {
-            if(!choices.includes(pool[i])) choices.push(pool[i]);
-        }
+        for(let i=0; i<pool.length && choices.length<8; i++) { if(!choices.includes(pool[i])) choices.push(pool[i]); }
         choices.sort(() => Math.random() - 0.5);
-
         choices.forEach(c => {
-            const btn = document.createElement('button');
-            btn.textContent = c; btn.className = `choice-btn ${currentWord.pos}`;
-            btn.onclick = () => checkAnswer(c, correctJa);
-            grid.appendChild(btn);
+            const btn = document.createElement('button'); btn.textContent = c; btn.className = `choice-btn ${currentWord.pos}`;
+            btn.onclick = () => checkAnswer(c, correctJa); grid.appendChild(btn);
         });
-        
         if (resetTimer) startTimer();
     }
 
     function startTimer() {
-        clearInterval(timerInterval);
-        let t = baseTimeLimit;
-        document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`;
-        timerInterval = setInterval(() => {
-            t -= 0.1;
-            document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`;
-            if(t <= 0) { clearInterval(timerInterval); checkAnswer("TIMEOUT", ""); }
-        }, 100);
+        clearInterval(timerInterval); let t = baseTimeLimit; document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`;
+        timerInterval = setInterval(() => { t -= 0.1; document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`; if(t <= 0) { clearInterval(timerInterval); checkAnswer("TIMEOUT", ""); } }, 100);
     }
 
     function checkAnswer(ans, cor) {
-        clearInterval(timerInterval);
-        const res = document.getElementById('result-message');
-        const grid = document.getElementById('choices-grid');
-        const mark = document.getElementById('huge-mark');
-        const phr = document.getElementById('target-phrase');
-        const subInst = document.getElementById('sub-instruction');
-        const rec = getRecord();
-
+        clearInterval(timerInterval); const rec = getRecord();
+        const mark = document.getElementById('huge-mark'); const subInst = document.getElementById('sub-instruction');
         if (ans === cor) {
             currentMeaningIndex++;
             if (currentMeaningIndex < currentMeanings.length) {
-                mark.textContent = "👍"; mark.className = "show-mark";
-                setTimeout(() => { mark.className = ""; }, 300);
-                showChoices(true); 
+                mark.textContent = "👍"; mark.className = "show-mark"; setTimeout(() => { mark.className = ""; }, 300); showChoices(true);
             } else {
-                mark.textContent = "⭕️"; mark.className = "show-mark";
-                correctCount++;
-                
-                let currentStatus = rec[currentWord.id] ? rec[currentWord.id].s : 0;
-                let nextStatus = currentStatus;
-                if (currentStatus === -1 || currentStatus === -2 || currentStatus === 0) nextStatus = 1; 
-                else if (currentStatus === 1 || currentStatus === 2) nextStatus = 2; 
-                
-                if (!isRetryMode) sessionRecord[currentWord.id] = nextStatus;
-
-                subInst.textContent = "PERFECT!!";
-                subInst.style.color = "var(--correct)";
-                phr.textContent = currentWord.phrase;
-                
-                currentIndex++;
-                setTimeout(() => { mark.className = ""; nextQuestion(); }, 1500);
+                mark.textContent = "⭕️"; mark.className = "show-mark"; correctCount++;
+                let s = rec[currentWord.id] ? rec[currentWord.id].s : 0;
+                let nextS = (s === -1 || s === -2 || s === 0) ? 1 : 2;
+                if (!isRetryMode) sessionRecord[currentWord.id] = nextS;
+                subInst.textContent = "PERFECT!!"; subInst.style.color = "var(--correct)";
+                document.getElementById('target-phrase').textContent = currentWord.phrase;
+                currentIndex++; setTimeout(() => { mark.className = ""; nextQuestion(); }, 1500);
             }
         } else {
-            mark.textContent = "❌"; mark.className = "show-mark";
-            wrongWordsList.push(currentWord);
-            
+            mark.textContent = "❌"; mark.className = "show-mark"; wrongWordsList.push(currentWord);
             if (!isRetryMode) sessionRecord[currentWord.id] = -1;
-
-            subInst.textContent = "FAILED...";
-            subInst.style.color = "var(--wrong)";
-            phr.textContent = currentWord.phrase;
-            
-            res.innerHTML = `<span style="color:var(--n-color)">正解: ${currentWord.ja.join(' / ')}</span>`;
-            grid.innerHTML = `<button class="next-btn" onclick="currentIndex++; nextQuestion();">次の問題へ</button>`;
+            subInst.textContent = "FAILED..."; subInst.style.color = "var(--wrong)";
+            document.getElementById('target-phrase').textContent = currentWord.phrase;
+            document.getElementById('result-message').innerHTML = `<span style="color:var(--n-color)">正解: ${currentWord.ja.join(' / ')}</span>`;
+            document.getElementById('choices-grid').innerHTML = `<button class="next-btn" onclick="currentIndex++; nextQuestion();">次の問題へ</button>`;
             setTimeout(() => { mark.className = ""; }, 500);
         }
     }
 
     function showResult() {
         if (!isRetryMode) {
-            let rec = getRecord();
-            for (let id in sessionRecord) {
-                rec[id] = { s: sessionRecord[id], t: Date.now() };
-            }
-            localStorage.setItem('sistan_v22_record', JSON.stringify(rec));
+            let rec = getRecord(); for (let id in sessionRecord) { rec[id] = { s: sessionRecord[id], t: Date.now() }; }
+            localStorage.setItem('sistan_v23_record', JSON.stringify(rec));
         }
-
-        document.getElementById('game-screen').classList.add('hidden');
-        document.getElementById('result-screen').classList.remove('hidden');
-        document.getElementById('score-display').textContent = `${quizList.length}問中 ${correctCount}問完全正解！`;
-        
-        const listDiv = document.getElementById('wrong-list');
-        listDiv.innerHTML = "<strong>間違えた単語:</strong><br>";
-        
-        if (wrongWordsList.length === 0) {
-            listDiv.innerHTML += "なし！完璧です！";
-            document.getElementById('retry-wrong-btn').classList.add('hidden');
-        } else {
-            window.lastWrongWords = [...wrongWordsList];
-            wrongWordsList.forEach(w => {
-                listDiv.innerHTML += `<div><strong>${w.en}</strong>: ${w.ja.join(' / ')}</div>`;
-            });
-            document.getElementById('retry-wrong-btn').classList.remove('hidden');
-        }
+        document.getElementById('game-screen').classList.add('hidden'); document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('score-display').textContent = `${quizList.length}問中 ${correctCount}問正解！`;
+        const listDiv = document.getElementById('wrong-list'); listDiv.innerHTML = "<strong>間違えた単語:</strong><br>";
+        if (wrongWordsList.length === 0) { listDiv.innerHTML += "なし！完璧です！"; document.getElementById('retry-wrong-btn').classList.add('hidden'); }
+        else { window.lastWrongWords = [...wrongWordsList]; wrongWordsList.forEach(w => { listDiv.innerHTML += `<div><strong>${w.en}</strong>: ${w.ja.join(' / ')}</div>`; }); document.getElementById('retry-wrong-btn').classList.remove('hidden'); }
     }
 </script>
 </body>
