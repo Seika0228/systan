@@ -4,13 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="apple-touch-icon" href="icon.png">
-    <title>志望校突破！シスタンマスター v23 Light</title>
+    <title>志望校突破！シスタンマスター v24</title>
     <script src="words.js"></script>
     <style>
-        /* (前回のCSSと同じなので、デザインは変わりません) */
-        :root { --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; --primary: #bb86fc; --v-color: #03dac6; --n-color: #cf6679; --a-color: #ffb74d; --correct: #4caf50; --wrong: #f44336; --toshin-part1: #f26d7d; --toshin-all: #ff9800; }
-        body.theme-light { --bg: #f5f5f5; --card: #ffffff; --text: #222222; --primary: #6200ee; --v-color: #018786; --n-color: #b00020; --a-color: #e65100; }
-        body.theme-blue { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --primary: #38bdf8; --v-color: #34d399; --n-color: #f43f5e; --a-color: #fbbf24; }
+        :root {
+            --bg: #121212; --card: #1e1e1e; --text: #e0e0e0;
+            --primary: #bb86fc; --v-color: #03dac6; --n-color: #cf6679;
+            --a-color: #ffb74d; --correct: #4caf50; --wrong: #f44336;
+            --toshin-part1: #f26d7d; --toshin-all: #ff9800;
+        }
+        body.theme-light {
+            --bg: #f5f5f5; --card: #ffffff; --text: #222222;
+            --primary: #6200ee; --v-color: #018786; --n-color: #b00020;
+            --a-color: #e65100;
+        }
+        body.theme-blue {
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
+            --primary: #38bdf8; --v-color: #34d399; --n-color: #f43f5e;
+            --a-color: #fbbf24;
+        }
         body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: var(--bg); margin: 0; padding: 10px; color: var(--text); touch-action: manipulation; transition: background 0.3s, color 0.3s;}
         .container { background: var(--card); padding: 20px 15px; border-radius: 12px; max-width: 500px; margin: auto; box-sizing: border-box; position: relative; transition: background 0.3s;}
         .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
@@ -27,6 +39,7 @@
         #bar-mast-all { background: var(--toshin-all); }
         .toshin-part-title { font-weight: bold; font-size: 14px; padding: 5px 5px; text-align: left; margin: 15px 0 5px 0; color: var(--text); border-bottom: 1px solid #555; }
         .toshin-part-card { background: linear-gradient(135deg, #3a1c20, #1a1a1a); border-radius: 10px; display: flex; align-items: stretch; margin-bottom: 15px; overflow: hidden; cursor: pointer; border: 1px solid var(--toshin-part1); box-shadow: 0 4px 10px rgba(242, 109, 125, 0.2);}
+        .toshin-part-card:active { transform: scale(0.98); }
         .toshin-part-left { background: var(--toshin-part1); color: #000; padding: 15px 10px; display: flex; flex-direction: column; justify-content: center; width: 65px; font-weight: bold; font-size: 14px; text-align: center; }
         .toshin-part-left span { font-size: 28px; line-height: 1; margin-top: 2px;}
         .toshin-part-mid { flex-grow: 1; padding: 15px; text-align: left; }
@@ -34,6 +47,7 @@
         .toshin-part-stats { font-size: 14px; color: #ddd; display: flex; align-items: center;}
         .toshin-part-right { background: rgba(242, 109, 125, 0.15); color: var(--toshin-part1); width: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; border-left: 1px solid rgba(242, 109, 125, 0.3); }
         .toshin-stage { background: #2a2a2a; border-radius: 8px; display: flex; align-items: stretch; margin-bottom: 10px; overflow: hidden; cursor: pointer; border: 1px solid #111; box-shadow: 0 2px 4px rgba(0,0,0,0.5);}
+        .toshin-stage:active { transform: scale(0.98); }
         .toshin-stage-left { background: #1a1a1a; color: var(--toshin-part1); padding: 12px; display: flex; flex-direction: column; justify-content: center; width: 60px; font-weight: bold; font-size: 14px; text-align: center; border-right: 1px solid #333;}
         .toshin-stage-left span { font-size: 24px; line-height: 1; margin-top: 2px;}
         .toshin-stage-mid { flex-grow: 1; padding: 12px; text-align: left; }
@@ -50,11 +64,29 @@
         .word { font-size: 38px; font-weight: bold; color: var(--primary); margin: 5px 0; min-height: 45px; }
         #sub-instruction { font-size: 14px; font-weight: bold; margin-bottom: 10px; min-height: 20px; }
         .phrase { font-size: 22px; color: #ffeb3b; font-weight: bold; margin-bottom: 15px; min-height: 30px; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        button.choice-btn { padding: 20px 8px; font-size: 14px; font-weight: bold; border: none; border-radius: 10px; background: #333; color: #fff; cursor: pointer; line-height: 1.4; word-break: keep-all; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
-        button.choice-btn.v { border-bottom: 5px solid var(--v-color); }
-        button.choice-btn.n { border-bottom: 5px solid var(--n-color); }
-        button.choice-btn.a { border-bottom: 5px solid var(--a-color); }
+        
+        /* 👁️ v24 限界突破の視認性チューニング */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        button.choice-btn { 
+            padding: 22px 10px; 
+            font-size: 18px; 
+            font-weight: 900; /* 文字を極太に */
+            border: 2px solid #555; /* 枠線を追加してくっきり */
+            border-radius: 12px; 
+            background: #2a2a2a; 
+            color: #ffffff; /* 完全な白 */
+            cursor: pointer; 
+            line-height: 1.3; 
+            word-break: keep-all; 
+            box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            transition: transform 0.1s;
+        }
+        button.choice-btn.v { border-bottom: 6px solid var(--v-color); }
+        button.choice-btn.n { border-bottom: 6px solid var(--n-color); }
+        button.choice-btn.a { border-bottom: 6px solid var(--a-color); }
+        button.choice-btn:active { transform: translateY(4px); box-shadow: none; }
+        
         .next-btn { grid-column: span 2; background: var(--primary); color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,0.5); font-weight: bold; padding: 20px; margin-top: 5px; font-size: 18px; border: none; border-radius: 10px; cursor: pointer;}
         #timer-display { font-size: 18px; font-weight: bold; color: var(--n-color); margin: 8px 0; }
         .badge { padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 8px;}
@@ -65,7 +97,7 @@
         #huge-mark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 200px; opacity: 0; pointer-events: none; z-index: 100; transition: opacity 0.1s; }
         .show-mark { opacity: 0.7 !important; }
         .hidden { display: none !important; }
-        .reveal-btn { grid-column: span 2; background: var(--primary); color: #fff; font-weight: bold; font-size: 20px; padding: 40px 20px; border: none; border-radius: 10px; cursor: pointer; text-shadow: 0 1px 2px rgba(0,0,0,0.5); box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
+        .reveal-btn { grid-column: span 2; background: var(--primary); color: #fff; font-weight: bold; font-size: 20px; padding: 40px 20px; border: none; border-radius: 12px; cursor: pointer; text-shadow: 0 1px 2px rgba(0,0,0,0.5); box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
     </style>
 </head>
 <body>
@@ -73,7 +105,7 @@
 <div class="container" id="home-screen">
     <div class="home-header">
         <div>
-            <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v23 Light</span></h2>
+            <h2>SYSTAN MASTER <span style="font-size: 12px; color: var(--v-color);">v24</span></h2>
             <div style="font-size: 11px; color: #888; text-align:left;">限界突破！英単語力を極限まで高める</div>
         </div>
         <button class="theme-btn" onclick="toggleTheme()">🎨 テーマ変更</button>
@@ -151,6 +183,17 @@
         </div>
         <div class="toshin-stage-right">＞</div>
     </div>
+    <div class="toshin-stage" onclick="openModal('301-400', 'STAGE 04')">
+        <div class="toshin-stage-left">STAGE<span>04</span></div>
+        <div class="toshin-stage-mid">
+            <div class="toshin-stage-title">No.0301 - 0400</div>
+            <div class="toshin-stage-stats">
+                <div class="stage-bar-bg"><div class="stage-bar-learn" id="bar-learn-st4"></div><div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st4"></div></div>
+                <span id="stat-st4-mastered">0</span> / <span id="stat-st4-total">0</span>語
+            </div>
+        </div>
+        <div class="toshin-stage-right">＞</div>
+    </div>
 </div>
 <div id="settings-modal" class="modal-overlay hidden">
     <div class="modal-content">
@@ -187,7 +230,6 @@
     <button class="start-btn" style="background:#444; color:#fff;" onclick="location.reload()">HOMEに戻る</button>
 </div>
 <script>
-    // --- 🎨 テーマ管理 ---
     const themes = ['dark', 'light', 'blue'];
     let currentThemeIndex = 0;
     function initTheme() {
@@ -202,8 +244,6 @@
         document.body.className = `theme-${newTheme}`;
         localStorage.setItem('sistan_theme', newTheme);
     }
-
-    // --- ( masterWordList は外部の words.js から読み込まれます ) ---
 
     let quizList = [];
     let currentWord = {};
@@ -221,32 +261,21 @@
     let isHiddenMode = false;
     let isChoicesRevealed = false;
 
-    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v22_record') || '{}'); }
-    if(!localStorage.getItem('sistan_v22_record') && localStorage.getItem('sistan_v21_record')) {
-        localStorage.setItem('sistan_v22_record', localStorage.getItem('sistan_v21_record'));
+    function getRecord() { return JSON.parse(localStorage.getItem('sistan_v24_record') || '{}'); }
+    if(!localStorage.getItem('sistan_v24_record') && localStorage.getItem('sistan_v23_record')) {
+        localStorage.setItem('sistan_v24_record', localStorage.getItem('sistan_v23_record'));
     }
 
     function applyForgetCurve() {
-        let rec = getRecord();
-        let now = Date.now();
-        let updated = false;
-        for (let id in rec) {
-            if (rec[id].s === 2 && (now - rec[id].t > FORGET_CURVE_MS)) {
-                rec[id].s = -2; updated = true;
-            }
-        }
-        if (updated) localStorage.setItem('sistan_v22_record', JSON.stringify(rec));
+        let rec = getRecord(); let now = Date.now(); let updated = false;
+        for (let id in rec) { if (rec[id].s === 2 && (now - rec[id].t > FORGET_CURVE_MS)) { rec[id].s = -2; updated = true; } }
+        if (updated) localStorage.setItem('sistan_v24_record', JSON.stringify(rec));
     }
 
     function calculateProgress(filterFunc, targetPrefix) {
-        const rec = getRecord();
-        const targetList = masterWordList.filter(filterFunc);
-        const total = targetList.length;
+        const rec = getRecord(); const targetList = masterWordList.filter(filterFunc); const total = targetList.length;
         let mastered = 0; let learning = 0;
-        targetList.forEach(w => {
-            let s = rec[w.id] ? rec[w.id].s : 0;
-            if (s === 2) mastered++; else if (s === 1 || s === -2) learning++;
-        });
+        targetList.forEach(w => { let s = rec[w.id] ? rec[w.id].s : 0; if (s === 2) mastered++; else if (s === 1 || s === -2) learning++; });
         const mastPercent = total === 0 ? 0 : Math.floor((mastered / total) * 100);
         const learnPercent = total === 0 ? 0 : Math.floor(((mastered + learning) / total) * 100);
         if (document.getElementById(`stat-${targetPrefix}-total`)) {
@@ -262,13 +291,10 @@
 
     function updateAllMeters() {
         applyForgetCurve();
-        calculateProgress(() => true, 'all');
-        calculateProgress(w => w.part === 1, 'part1');
-        calculateProgress(w => w.id >= 1 && w.id <= 100, 'st1');
-        calculateProgress(w => w.id >= 101 && w.id <= 200, 'st2');
-        calculateProgress(w => w.id >= 201 && w.id <= 300, 'st3');
-        const rec = getRecord();
-        let weakCount = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1).length;
+        calculateProgress(() => true, 'all'); calculateProgress(w => w.part === 1, 'part1');
+        calculateProgress(w => w.id >= 1 && w.id <= 100, 'st1'); calculateProgress(w => w.id >= 101 && w.id <= 200, 'st2');
+        calculateProgress(w => w.id >= 201 && w.id <= 300, 'st3'); calculateProgress(w => w.id >= 301 && w.id <= 400, 'st4');
+        const rec = getRecord(); let weakCount = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1).length;
         document.getElementById('weak-count').textContent = `(${weakCount}語)`;
     }
     window.onload = updateAllMeters;
@@ -278,17 +304,14 @@
     function openModal(range, title) { selectedRange = range; document.getElementById('modal-title').textContent = title; document.getElementById('settings-modal').classList.remove('hidden'); }
     function closeModal() { document.getElementById('settings-modal').classList.add('hidden'); }
     function openWeakModal() {
-        const rec = getRecord(); if (masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1).length === 0) { alert("現在、要復習の単語はありません。"); return; }
+        if (masterWordList.filter(w => getRecord()[w.id] && getRecord()[w.id].s === -1).length === 0) { alert("現在、要復習の単語はありません。"); return; }
         document.getElementById('weak-modal').classList.remove('hidden');
     }
     function closeWeakModal() { document.getElementById('weak-modal').classList.add('hidden'); }
     function showWeakList() {
-        closeWeakModal(); const rec = getRecord(); const weakList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
-        const content = document.getElementById('weak-list-content');
-        let html = "";
-        weakList.forEach(w => {
-            html += `<div style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #444;"><strong style="color:var(--primary); font-size:20px;">${w.en}</strong><span style="font-size:14px; color:#ccc; margin-left:10px;">${w.ja.join(' / ')}</span><div style="font-size:14px; color:var(--a-color); margin-top:5px; font-weight:bold;">${w.phrase}</div></div>`;
-        });
+        closeWeakModal(); const weakList = masterWordList.filter(w => getRecord()[w.id] && getRecord()[w.id].s === -1);
+        const content = document.getElementById('weak-list-content'); let html = "";
+        weakList.forEach(w => { html += `<div style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #444;"><strong style="color:var(--primary); font-size:20px;">${w.en}</strong><span style="font-size:14px; color:#ccc; margin-left:10px;">${w.ja.join(' / ')}</span><div style="font-size:14px; color:var(--a-color); margin-top:5px; font-weight:bold;">${w.phrase}</div></div>`; });
         content.innerHTML = html; document.getElementById('home-screen').classList.add('hidden'); document.getElementById('weak-list-screen').classList.remove('hidden');
     }
     function hideWeakList() { document.getElementById('weak-list-screen').classList.add('hidden'); document.getElementById('home-screen').classList.remove('hidden'); }
@@ -302,12 +325,12 @@
             if (selectedRange === '1-100') baseList = masterWordList.filter(w => w.id >= 1 && w.id <= 100);
             else if (selectedRange === '101-200') baseList = masterWordList.filter(w => w.id >= 101 && w.id <= 200);
             else if (selectedRange === '201-300') baseList = masterWordList.filter(w => w.id >= 201 && w.id <= 300);
+            else if (selectedRange === '301-400') baseList = masterWordList.filter(w => w.id >= 301 && w.id <= 400);
             else if (selectedRange === 'part1') baseList = masterWordList.filter(w => w.part === 1);
             else if (selectedRange === 'weak') baseList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
             quizList = baseList.sort((a, b) => {
-                const sA = rec[a.id] ? rec[a.id].s : 0; const sB = rec[b.id] ? rec[b.id].s : 0;
                 const getP = (s) => (s===-1?100 : s===-2?80 : s===1?50 : s===0?30 : 0);
-                return getP(sB) - getP(sA) || Math.random() - 0.5;
+                return getP(rec[b.id]?rec[b.id].s:0) - getP(rec[a.id]?rec[a.id].s:0) || Math.random() - 0.5;
             });
             let limit = parseInt(questionCount); if(limit > baseList.length) limit = baseList.length;
             quizList = quizList.slice(0, limit).sort(() => Math.random() - 0.5);
@@ -320,12 +343,12 @@
     function nextQuestion() {
         if (currentIndex >= quizList.length) { showResult(); return; }
         currentWord = quizList[currentIndex]; isChoicesRevealed = !isHiddenMode;
-        const rec = getRecord(); const status = rec[currentWord.id] ? rec[currentWord.id].s : 0;
+        const status = getRecord()[currentWord.id] ? getRecord()[currentWord.id].s : 0;
         document.getElementById('target-star').textContent = "★".repeat(currentWord.star) + "☆".repeat(3-currentWord.star);
         let badge = document.getElementById('screen-badge'); badge.className = "badge hidden";
         if (isRetryMode) { badge.textContent = "解き直し"; badge.className = "badge retry-badge"; } else if (status === -1) { badge.textContent = "要復習"; badge.className = "badge review-badge"; }
         document.getElementById('progress-text').textContent = `Q ${currentIndex+1}/${quizList.length}`;
-        let wordDisplay = currentWord.en; if (currentWord.hint) wordDisplay += ` <span style="font-size:20px; color:#aaa;">(${currentWord.hint})</span>`;
+        let wordDisplay = currentWord.en; if (currentWord.hint) wordDisplay += ` <br><span style="font-size:24px; color:#aaa;">(${currentWord.hint})</span>`;
         document.getElementById('target-word').innerHTML = wordDisplay;
         document.getElementById('target-phrase').textContent = ""; document.getElementById('result-message').textContent = "";
         currentMeanings = [...currentWord.ja].sort(() => Math.random() - 0.5); currentMeaningIndex = 0;
@@ -367,26 +390,22 @@
     }
 
     function checkAnswer(ans, cor) {
-        clearInterval(timerInterval); const rec = getRecord();
-        const mark = document.getElementById('huge-mark'); const subInst = document.getElementById('sub-instruction');
+        clearInterval(timerInterval); const rec = getRecord(); const mark = document.getElementById('huge-mark'); const subInst = document.getElementById('sub-instruction');
         if (ans === cor) {
             currentMeaningIndex++;
             if (currentMeaningIndex < currentMeanings.length) {
                 mark.textContent = "👍"; mark.className = "show-mark"; setTimeout(() => { mark.className = ""; }, 300); showChoices(true);
             } else {
                 mark.textContent = "⭕️"; mark.className = "show-mark"; correctCount++;
-                let s = rec[currentWord.id] ? rec[currentWord.id].s : 0;
-                let nextS = (s === -1 || s === -2 || s === 0) ? 1 : 2;
+                let s = rec[currentWord.id] ? rec[currentWord.id].s : 0; let nextS = (s === -1 || s === -2 || s === 0) ? 1 : 2;
                 if (!isRetryMode) sessionRecord[currentWord.id] = nextS;
-                subInst.textContent = "PERFECT!!"; subInst.style.color = "var(--correct)";
-                document.getElementById('target-phrase').textContent = currentWord.phrase;
+                subInst.textContent = "PERFECT!!"; subInst.style.color = "var(--correct)"; document.getElementById('target-phrase').textContent = currentWord.phrase;
                 currentIndex++; setTimeout(() => { mark.className = ""; nextQuestion(); }, 1500);
             }
         } else {
             mark.textContent = "❌"; mark.className = "show-mark"; wrongWordsList.push(currentWord);
             if (!isRetryMode) sessionRecord[currentWord.id] = -1;
-            subInst.textContent = "FAILED..."; subInst.style.color = "var(--wrong)";
-            document.getElementById('target-phrase').textContent = currentWord.phrase;
+            subInst.textContent = "FAILED..."; subInst.style.color = "var(--wrong)"; document.getElementById('target-phrase').textContent = currentWord.phrase;
             document.getElementById('result-message').innerHTML = `<span style="color:var(--n-color)">正解: ${currentWord.ja.join(' / ')}</span>`;
             document.getElementById('choices-grid').innerHTML = `<button class="next-btn" onclick="currentIndex++; nextQuestion();">次の問題へ</button>`;
             setTimeout(() => { mark.className = ""; }, 500);
@@ -394,12 +413,8 @@
     }
 
     function showResult() {
-        if (!isRetryMode) {
-            let rec = getRecord(); for (let id in sessionRecord) { rec[id] = { s: sessionRecord[id], t: Date.now() }; }
-            localStorage.setItem('sistan_v22_record', JSON.stringify(rec));
-        }
-        document.getElementById('game-screen').classList.add('hidden'); document.getElementById('result-screen').classList.remove('hidden');
-        document.getElementById('score-display').textContent = `${quizList.length}問中 ${correctCount}問正解！`;
+        if (!isRetryMode) { let rec = getRecord(); for (let id in sessionRecord) { rec[id] = { s: sessionRecord[id], t: Date.now() }; } localStorage.setItem('sistan_v24_record', JSON.stringify(rec)); }
+        document.getElementById('game-screen').classList.add('hidden'); document.getElementById('result-screen').classList.remove('hidden'); document.getElementById('score-display').textContent = `${quizList.length}問中 ${correctCount}問正解！`;
         const listDiv = document.getElementById('wrong-list'); listDiv.innerHTML = "<strong>間違えた単語:</strong><br>";
         if (wrongWordsList.length === 0) { listDiv.innerHTML += "なし！完璧です！"; document.getElementById('retry-wrong-btn').classList.add('hidden'); }
         else { window.lastWrongWords = [...wrongWordsList]; wrongWordsList.forEach(w => { listDiv.innerHTML += `<div><strong>${w.en}</strong>: ${w.ja.join(' / ')}</div>`; }); document.getElementById('retry-wrong-btn').classList.remove('hidden'); }
