@@ -128,6 +128,9 @@
         </div>
         <button class="theme-btn" onclick="toggleTheme()">🎨 テーマ変更</button>
     </div>
+
+    <button id="home-audio-btn" onclick="toggleAudio()" style="width: 100%; background: transparent; color: var(--primary); font-weight: bold; font-size: 16px; padding: 12px; border: 2px solid var(--primary); border-radius: 8px; margin-bottom: 15px; cursor: pointer; box-shadow: var(--btn-shadow); transition: 0.2s;">🔊 出題時の音声：オン</button>
+
     <button class="start-btn" onclick="showStageScreen()">学習を始める</button>
     <button class="weak-btn" onclick="openWeakModal()">苦手単語メニュー <span id="weak-count"></span></button>
 </div>
@@ -219,7 +222,7 @@
         
         <div style="background:var(--stage-bg); border: 1px solid var(--stage-border); padding:15px; border-radius:10px; margin-bottom:15px; text-align:left;">
             <label style="color:var(--text); display:flex; align-items:center; margin-bottom:12px; font-size:15px; font-weight:bold; cursor:pointer;">
-                <input type="checkbox" id="audio-toggle" style="transform: scale(1.5); margin-right:12px;" checked> 🔊 出題時に音声を再生する
+                <input type="checkbox" id="audio-toggle" style="transform: scale(1.5); margin-right:12px;" onchange="syncAudioToggle(this.checked)" checked> 🔊 出題時に音声を再生する
             </label>
             <label style="color:var(--text); display:flex; align-items:center; font-size:15px; font-weight:bold; cursor:pointer;">
                 <input type="checkbox" id="hidden-mode-toggle" style="transform: scale(1.5); margin-right:12px;"> 🙈 選択肢を隠す (想起モード)
@@ -259,9 +262,35 @@
     const okSound = new Audio('ok.mp3');
     const ngSound = new Audio('ng.mp3');
 
+    // ★追加部分：音声のオンオフを管理する★
+    let isAudioOn = true;
+
+    function toggleAudio() {
+        isAudioOn = !isAudioOn;
+        const btn = document.getElementById('home-audio-btn');
+        const settingToggle = document.getElementById('audio-toggle');
+        
+        if (isAudioOn) {
+            btn.innerHTML = '🔊 出題時の音声：オン';
+            btn.style.color = 'var(--primary)';
+            btn.style.borderColor = 'var(--primary)';
+            if(settingToggle) settingToggle.checked = true;
+        } else {
+            btn.innerHTML = '🔇 出題時の音声：オフ';
+            btn.style.color = 'var(--text-muted)';
+            btn.style.borderColor = 'var(--text-muted)';
+            if(settingToggle) settingToggle.checked = false;
+        }
+    }
+
+    // 設定画面のチェックボックスからも連動させる
+    function syncAudioToggle(isChecked) {
+        if (isAudioOn !== isChecked) toggleAudio();
+    }
+
     // --- 🗣️ ネイティブ音声読み上げ機能（Web Speech API） ---
     function speakCurrentWord() {
-        if (!document.getElementById('audio-toggle').checked) return;
+        if (!isAudioOn) return; // ★変更：音声オフならここで止める
         const word = currentWord.en;
         const utterance = new SpeechSynthesisUtterance(word);
         utterance.lang = 'en-US'; // アメリカ英語
