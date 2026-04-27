@@ -7,6 +7,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="icon.png.jpg?v=12345">
     <link rel="icon" type="image/png" href="icon.png.jpg?v=12345">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
     <title>志望校突破！シスタンマスター v26</title>
     <script src="words.js"></script>
     <style>
@@ -132,7 +133,7 @@
         <button class="theme-btn" onclick="toggleTheme()">🎨 テーマ変更</button>
     </div>
 
-    <button id="home-audio-btn" onclick="toggleAudio()" style="width: 100%; background: transparent; color: var(--primary); font-weight: bold; font-size: 16px; padding: 12px; border: 2px solid var(--primary); border-radius: 8px; margin-bottom: 15px; cursor: pointer; box-shadow: var(--btn-shadow); transition: 0.2s;">🔊 出題時の音声：オン</button>
+    <button id="home-audio-btn" onclick="toggleAudio()" style="width: 100%; background: transparent; color: var(--primary); font-weight: bold; font-size: 16px; padding: 12px; border: 2px solid var(--primary); border-radius: 8px; margin-bottom: 15px; cursor: pointer; box-shadow: var(--btn-shadow); transition: 0.2s;">🔊 音声（発音・正解音）：オン</button>
 
     <button class="start-btn" onclick="showStageScreen()">学習を始める</button>
     <button class="weak-btn" onclick="openWeakModal()">苦手単語メニュー <span id="weak-count"></span></button>
@@ -274,12 +275,12 @@
         const settingToggle = document.getElementById('audio-toggle');
         
         if (isAudioOn) {
-            btn.innerHTML = '🔊 出題時の音声：オン';
+            btn.innerHTML = '🔊 音声（発音・正解音）：オン';
             btn.style.color = 'var(--primary)';
             btn.style.borderColor = 'var(--primary)';
             if(settingToggle) settingToggle.checked = true;
         } else {
-            btn.innerHTML = '🔇 出題時の音声：オフ';
+            btn.innerHTML = '🔇 音声（完全ミュート）：オフ';
             btn.style.color = 'var(--text-muted)';
             btn.style.borderColor = 'var(--text-muted)';
             if(settingToggle) settingToggle.checked = false;
@@ -475,7 +476,7 @@
     function checkAnswer(ans, cor) {
         clearInterval(timerInterval); const rec = getRecord(); const mark = document.getElementById('huge-mark'); const subInst = document.getElementById('sub-instruction');
         if (ans === cor) {
-            okSound.currentTime = 0; okSound.play();
+            if (isAudioOn) { okSound.currentTime = 0; okSound.play(); } // ★変更：音声オンの時だけ鳴らす
             currentMeaningIndex++;
             if (currentMeaningIndex < currentMeanings.length) {
                 mark.textContent = "👍"; mark.className = "show-mark"; setTimeout(() => { mark.className = ""; }, 300); showChoices(true);
@@ -487,7 +488,7 @@
                 currentIndex++; setTimeout(() => { mark.className = ""; nextQuestion(); }, 1500);
             }
         } else {
-            ngSound.currentTime = 0; ngSound.play();
+            if (isAudioOn) { ngSound.currentTime = 0; ngSound.play(); } // ★変更：音声オンの時だけ鳴らす
             mark.textContent = "❌"; mark.className = "show-mark"; wrongWordsList.push(currentWord);
             if (!isRetryMode) sessionRecord[currentWord.id] = -1;
             subInst.textContent = "FAILED..."; subInst.style.color = "var(--wrong)"; document.getElementById('target-phrase').textContent = currentWord.phrase;
