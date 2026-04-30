@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <link rel="apple-touch-icon" sizes="180x180" href="icon.png.jpg?v=12345">
     <link rel="icon" type="image/png" href="icon.png.jpg?v=12345">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
     <title>志望校突破！シスタンマスター v26</title>
     <script src="words.js"></script>
     <style>
+        /* 🎨 全テーマの配色を極限まで最適化 */
         :root {
             --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; --text-muted: #aaa;
             --primary: #bb86fc; --v-color: #03dac6; --n-color: #cf6679; --a-color: #ffb74d; 
@@ -125,7 +128,6 @@
     <button class="start-btn" onclick="showStageScreen()">学習を始める</button>
     <button class="weak-btn" onclick="openWeakModal()">苦手単語メニュー <span id="weak-count"></span></button>
 </div>
-
 <div id="weak-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <h3 style="margin-top:0; color:var(--n-color); font-size:22px;">苦手単語メニュー</h3>
@@ -135,13 +137,11 @@
         <button class="modal-btn" style="background:none; border:2px solid var(--text-muted); margin-top:15px;" onclick="closeWeakModal()">キャンセル</button>
     </div>
 </div>
-
 <div class="container hidden" id="weak-list-screen">
     <button onclick="hideWeakList()" style="background:none; border:none; color:var(--text-muted); font-size:16px; font-weight:bold; text-align:left; width:100%; padding:10px 0; margin-bottom:10px;">＜ TOPへ戻る</button>
     <h2 style="color:var(--n-color);">苦手単語一覧</h2>
     <div id="weak-list-content" style="text-align:left; max-height:450px; overflow-y:auto; background:var(--stage-bg); border: 1px solid var(--stage-border); padding:15px; border-radius:10px; margin-top:15px;"></div>
 </div>
-
 <div class="container hidden" id="stage-screen">
     <button onclick="showHomeScreen()" style="background:none; border:none; color:var(--text-muted); font-size:16px; font-weight:bold; text-align:left; width:100%; padding:10px 0; margin-bottom:10px;">＜ TOPへ戻る</button>
     <div class="toshin-header" onclick="openModal('all', '全範囲')">
@@ -165,7 +165,6 @@
         </div>
         <div class="toshin-part-right">＞</div>
     </div>
-    
     <div class="toshin-stage" onclick="openModal('1-100', 'STAGE 01')">
         <div class="toshin-stage-left">STAGE<span>01</span></div>
         <div class="toshin-stage-mid">
@@ -222,10 +221,10 @@
         <div class="toshin-stage-right">＞</div>
     </div>
 </div>
-
 <div id="settings-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <h3 id="modal-title" style="margin-top:0; color:var(--primary); font-size:22px;">範囲選択</h3>
+        
         <div style="background:var(--stage-bg); border: 1px solid var(--stage-border); padding:15px; border-radius:10px; margin-bottom:15px; text-align:left;">
             <label style="color:var(--text); display:flex; align-items:center; margin-bottom:12px; font-size:15px; font-weight:bold; cursor:pointer;">
                 <input type="checkbox" id="audio-toggle" style="transform: scale(1.5); margin-right:12px;" onchange="syncAudioToggle(this.checked)" checked> 🔊 出題時に音声を再生する
@@ -234,6 +233,7 @@
                 <input type="checkbox" id="hidden-mode-toggle" style="transform: scale(1.5); margin-right:12px;"> 🙈 選択肢を隠す (想起モード)
             </label>
         </div>
+
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">出題数を選んでください</p>
         <button class="modal-btn" onclick="setCount(10)">10問</button>
         <button class="modal-btn" onclick="setCount(20)">20問</button>
@@ -242,7 +242,6 @@
         <button class="modal-btn" style="background:none; border:2px solid var(--text-muted); margin-top:10px;" onclick="closeModal()">キャンセル</button>
     </div>
 </div>
-
 <div class="container hidden" id="game-screen">
     <div id="progress" style="font-size: 14px; font-weight:bold; margin-bottom: 5px; display:flex; justify-content:center; align-items:center;">
         <span id="progress-text"></span><span id="screen-badge"></span>
@@ -256,7 +255,6 @@
     <div id="result-message" style="margin-top: 15px; min-height: 25px; font-size: 18px;"></div>
     <button onclick="location.reload()" style="background: none; border: none; color: var(--text-muted); text-decoration: underline; margin-top: 20px; font-size: 14px; cursor: pointer;">QUIT（記録せず中断）</button>
 </div>
-
 <div class="container hidden" id="result-screen">
     <h2 id="result-title" style="font-size: 26px;">結果発表</h2>
     <div id="score-display" style="font-size: 28px; font-weight: bold; margin: 15px 0;"></div>
@@ -264,7 +262,6 @@
     <button id="retry-wrong-btn" class="start-btn hidden" onclick="startQuizMode(true)">間違えた問題だけ解き直し</button>
     <button class="start-btn" style="background:var(--stage-bg); border:1px solid var(--stage-border); color:var(--text);" onclick="location.reload()">HOMEに戻る</button>
 </div>
-
 <script>
     const okSound = new Audio('ok.mp3');
     const ngSound = new Audio('ng.mp3');
@@ -335,6 +332,9 @@
     let isChoicesRevealed = false;
 
     function getRecord() { return JSON.parse(localStorage.getItem('sistan_v26_record') || '{}'); }
+    if(!localStorage.getItem('sistan_v26_record') && localStorage.getItem('sistan_v25_record')) {
+        localStorage.setItem('sistan_v26_record', localStorage.getItem('sistan_v25_record'));
+    }
 
     function applyForgetCurve() {
         let rec = getRecord(); let now = Date.now(); let updated = false;
@@ -364,8 +364,7 @@
         calculateProgress(() => true, 'all'); calculateProgress(w => w.part === 1, 'part1');
         calculateProgress(w => w.id >= 1 && w.id <= 100, 'st1'); calculateProgress(w => w.id >= 101 && w.id <= 200, 'st2');
         calculateProgress(w => w.id >= 201 && w.id <= 300, 'st3'); calculateProgress(w => w.id >= 301 && w.id <= 400, 'st4');
-        // ★ここに追加した計算ロジック
-        calculateProgress(w => w.id >= 401 && w.id <= 500, 'st5');
+        calculateProgress(w => w.id >= 401 && w.id <= 500, 'st5'); // ★追加：STAGE 05 の進捗計算
         const rec = getRecord(); let weakCount = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1).length;
         document.getElementById('weak-count').textContent = `(${weakCount}語)`;
     }
@@ -404,11 +403,9 @@
             else if (selectedRange === '101-200') baseList = masterWordList.filter(w => w.id >= 101 && w.id <= 200);
             else if (selectedRange === '201-300') baseList = masterWordList.filter(w => w.id >= 201 && w.id <= 300);
             else if (selectedRange === '301-400') baseList = masterWordList.filter(w => w.id >= 301 && w.id <= 400);
-            // ★ここに追加した問題抽出ロジック
-            else if (selectedRange === '401-500') baseList = masterWordList.filter(w => w.id >= 401 && w.id <= 500);
+            else if (selectedRange === '401-500') baseList = masterWordList.filter(w => w.id >= 401 && w.id <= 500); // ★追加：STAGE 05の出題
             else if (selectedRange === 'part1') baseList = masterWordList.filter(w => w.part === 1);
             else if (selectedRange === 'weak') baseList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
-            
             quizList = baseList.sort((a, b) => {
                 const getP = (s) => (s===-1?100 : s===-2?80 : s===1?50 : s===0?30 : 0);
                 return getP(rec[b.id]?rec[b.id].s:0) - getP(rec[a.id]?rec[a.id].s:0) || Math.random() - 0.5;
@@ -429,3 +426,81 @@
         let badge = document.getElementById('screen-badge'); badge.className = "badge hidden";
         if (isRetryMode) { badge.textContent = "解き直し"; badge.className = "badge retry-badge"; } else if (status === -1) { badge.textContent = "要復習"; badge.className = "badge review-badge"; }
         document.getElementById('progress-text').textContent = `Q ${currentIndex+1}/${quizList.length}`;
+        let wordDisplay = currentWord.en; if (currentWord.hint) wordDisplay += ` <br><span style="font-size:24px; color:var(--text-muted);">(${currentWord.hint})</span>`;
+        document.getElementById('target-word').innerHTML = wordDisplay;
+        document.getElementById('target-phrase').textContent = ""; document.getElementById('result-message').textContent = "";
+        currentMeanings = [...currentWord.ja].sort(() => Math.random() - 0.5); currentMeaningIndex = 0;
+        
+        speakCurrentWord();
+        showChoices(true);
+    }
+
+    function revealChoices() { isChoicesRevealed = true; showChoices(false); }
+
+    function showChoices(resetTimer = true) {
+        const grid = document.getElementById('choices-grid'); grid.innerHTML = "";
+        const correctJa = currentMeanings[currentMeaningIndex]; const subInst = document.getElementById('sub-instruction');
+        if (currentMeanings.length > 1) {
+            subInst.textContent = currentMeaningIndex === 0 ? `複数の意味があります！(1/${currentMeanings.length})` : `正解！別の意味も！(${currentMeaningIndex+1}/${currentMeanings.length})`;
+            subInst.style.color = currentMeaningIndex === 0 ? "var(--a-color)" : "var(--v-color)";
+        } else { subInst.textContent = ""; }
+        if (!isChoicesRevealed) {
+            const btn = document.createElement('button'); btn.textContent = "タップして選択肢を表示"; btn.className = "reveal-btn"; btn.onclick = revealChoices; grid.appendChild(btn);
+            if (resetTimer) startTimer(); return;
+        }
+        let choices = [correctJa]; let isAB = correctJa.includes("A") || correctJa.includes("B");
+        let pool = masterWordList.flatMap(w => w.ja).filter(j => !currentWord.ja.includes(j));
+        if (isAB) {
+            let abPool = pool.filter(j => j.includes("A") || j.includes("B"));
+            pool = abPool.length >= 7 ? abPool : [...abPool, ...pool.filter(j => !j.includes("A") && !j.includes("B"))];
+        } else { pool = pool.filter(j => !j.includes("A") && !j.includes("B")); }
+        pool.sort(() => Math.random() - 0.5);
+        for(let i=0; i<pool.length && choices.length<8; i++) { if(!choices.includes(pool[i])) choices.push(pool[i]); }
+        choices.sort(() => Math.random() - 0.5);
+        choices.forEach(c => {
+            const btn = document.createElement('button'); btn.textContent = c; btn.className = `choice-btn ${currentWord.pos}`;
+            btn.onclick = () => checkAnswer(c, correctJa); grid.appendChild(btn);
+        });
+        if (resetTimer) startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval); let t = baseTimeLimit; document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`;
+        timerInterval = setInterval(() => { t -= 0.1; document.getElementById('timer-display').textContent = `⏳ ${t.toFixed(1)}s`; if(t <= 0) { clearInterval(timerInterval); checkAnswer("TIMEOUT", ""); } }, 100);
+    }
+
+    function checkAnswer(ans, cor) {
+        clearInterval(timerInterval); const rec = getRecord(); const mark = document.getElementById('huge-mark'); const subInst = document.getElementById('sub-instruction');
+        if (ans === cor) {
+            if (isAudioOn && okSound) { okSound.currentTime = 0; okSound.play().catch(e=>console.log(e)); } 
+            currentMeaningIndex++;
+            if (currentMeaningIndex < currentMeanings.length) {
+                mark.textContent = "👍"; mark.className = "show-mark"; setTimeout(() => { mark.className = ""; }, 300); showChoices(true);
+            } else {
+                mark.textContent = "⭕️"; mark.className = "show-mark"; correctCount++;
+                let s = rec[currentWord.id] ? rec[currentWord.id].s : 0; let nextS = (s === -1 || s === -2 || s === 0) ? 1 : 2;
+                if (!isRetryMode) sessionRecord[currentWord.id] = nextS;
+                subInst.textContent = "PERFECT!!"; subInst.style.color = "var(--correct)"; document.getElementById('target-phrase').textContent = currentWord.phrase;
+                currentIndex++; setTimeout(() => { mark.className = ""; nextQuestion(); }, 1500);
+            }
+        } else {
+            if (isAudioOn && ngSound) { ngSound.currentTime = 0; ngSound.play().catch(e=>console.log(e)); } 
+            mark.textContent = "❌"; mark.className = "show-mark"; wrongWordsList.push(currentWord);
+            if (!isRetryMode) sessionRecord[currentWord.id] = -1;
+            subInst.textContent = "FAILED..."; subInst.style.color = "var(--wrong)"; document.getElementById('target-phrase').textContent = currentWord.phrase;
+            document.getElementById('result-message').innerHTML = `<span style="color:var(--n-color)">正解: ${currentWord.ja.join(' / ')}</span>`;
+            document.getElementById('choices-grid').innerHTML = `<button class="next-btn" onclick="currentIndex++; nextQuestion();">次の問題へ</button>`;
+            setTimeout(() => { mark.className = ""; }, 500);
+        }
+    }
+
+    function showResult() {
+        if (!isRetryMode) { let rec = getRecord(); for (let id in sessionRecord) { rec[id] = { s: sessionRecord[id], t: Date.now() }; } localStorage.setItem('sistan_v26_record', JSON.stringify(rec)); }
+        document.getElementById('game-screen').classList.add('hidden'); document.getElementById('result-screen').classList.remove('hidden'); document.getElementById('score-display').textContent = `${quizList.length}問中 ${correctCount}問正解！`;
+        const listDiv = document.getElementById('wrong-list'); listDiv.innerHTML = "<strong>間違えた単語:</strong><br>";
+        if (wrongWordsList.length === 0) { listDiv.innerHTML += "なし！完璧です！"; document.getElementById('retry-wrong-btn').classList.add('hidden'); }
+        else { window.lastWrongWords = [...wrongWordsList]; wrongWordsList.forEach(w => { listDiv.innerHTML += `<div><strong>${w.en}</strong>: ${w.ja.join(' / ')}</div>`; }); document.getElementById('retry-wrong-btn').classList.remove('hidden'); }
+    }
+</script>
+</body>
+</html>
