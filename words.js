@@ -1,4 +1,4 @@
-// 単語データ専用ファイル (1-400)
+// 単語データ専用ファイル (1-500)
 const masterWordList = [
     { id: 1, part: 1, pos: "v", star: 3, en: "follow", ja: ["～の後に続く", "～に従う"], phrase: "follow his advice" },
     { id: 2, part: 1, pos: "v", star: 3, en: "consider", ja: ["～を考慮する"], phrase: "consider the problem" },
