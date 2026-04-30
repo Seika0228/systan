@@ -500,5 +500,4 @@ const masterWordList = [
     { id: 498, en: "stream", ja: ["小川"], phrase: "", star: 3, part: 1, pos: "n" },
     { id: 499, en: "notion", ja: ["概念"], phrase: "", star: 3, part: 1, pos: "n" },
     { id: 500, en: "yard", ja: ["庭"], phrase: "", star: 3, part: 1, pos: "n" }
-
 ];
