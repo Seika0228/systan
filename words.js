@@ -399,7 +399,7 @@ const masterWordList = [
     { id: 397, part: 1, pos: "n", star: 3, en: "knowledge", ja: ["知識"], phrase: "scientific knowledge" },
     { id: 398, part: 1, pos: "n", star: 3, en: "nation", ja: ["国"], phrase: "the Asian nations" },
     { id: 399, part: 1, pos: "n", star: 3, en: "effort", ja: ["努力"], phrase: "make an effort" },
-    { id: 400, part: 1, pos: "n", star: 3, en: "period", ja: ["時代"], phrase: "a period of time" }
+    { id: 400, part: 1, pos: "n", star: 3, en: "period", ja: ["時代"], phrase: "a period of time" },
     { id: 401, en: "population", ja: ["人口"], phrase: "", star: 3, part: 1, pos: "n" },
     { id: 402, en: "purpose", ja: ["目的"], phrase: "", star: 3, part: 1, pos: "n" },
     { id: 403, en: "behavior", ja: ["行動"], phrase: "", star: 3, part: 1, pos: "n" },
