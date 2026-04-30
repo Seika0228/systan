@@ -220,6 +220,17 @@
         </div>
         <div class="toshin-stage-right">＞</div>
     </div>
+    <div class="toshin-stage" onclick="openModal('501-600', 'STAGE 06')">
+        <div class="toshin-stage-left">STAGE<span>06</span></div>
+        <div class="toshin-stage-mid">
+            <div class="toshin-stage-title">No.0501 - 0600</div>
+            <div class="toshin-stage-stats">
+                <div class="stage-bar-bg"><div class="stage-bar-learn" id="bar-learn-st6"></div><div class="stage-bar-mast stage-bar-mast-p1" id="bar-mast-st6"></div></div>
+                <span id="stat-st6-mastered">0</span> / <span id="stat-st6-total">0</span>語
+            </div>
+        </div>
+        <div class="toshin-stage-right">＞</div>
+    </div>
 </div>
 <div id="settings-modal" class="modal-overlay hidden">
     <div class="modal-content">
@@ -364,7 +375,8 @@
         calculateProgress(() => true, 'all'); calculateProgress(w => w.part === 1, 'part1');
         calculateProgress(w => w.id >= 1 && w.id <= 100, 'st1'); calculateProgress(w => w.id >= 101 && w.id <= 200, 'st2');
         calculateProgress(w => w.id >= 201 && w.id <= 300, 'st3'); calculateProgress(w => w.id >= 301 && w.id <= 400, 'st4');
-        calculateProgress(w => w.id >= 401 && w.id <= 500, 'st5'); // ★追加：STAGE 05 の進捗計算
+        calculateProgress(w => w.id >= 401 && w.id <= 500, 'st5'); 
+        calculateProgress(w => w.id >= 501 && w.id <= 600, 'st6'); // ★追加：STAGE 06
         const rec = getRecord(); let weakCount = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1).length;
         document.getElementById('weak-count').textContent = `(${weakCount}語)`;
     }
@@ -403,7 +415,8 @@
             else if (selectedRange === '101-200') baseList = masterWordList.filter(w => w.id >= 101 && w.id <= 200);
             else if (selectedRange === '201-300') baseList = masterWordList.filter(w => w.id >= 201 && w.id <= 300);
             else if (selectedRange === '301-400') baseList = masterWordList.filter(w => w.id >= 301 && w.id <= 400);
-            else if (selectedRange === '401-500') baseList = masterWordList.filter(w => w.id >= 401 && w.id <= 500); // ★追加：STAGE 05の出題
+            else if (selectedRange === '401-500') baseList = masterWordList.filter(w => w.id >= 401 && w.id <= 500);
+            else if (selectedRange === '501-600') baseList = masterWordList.filter(w => w.id >= 501 && w.id <= 600); // ★追加：STAGE 06の出題
             else if (selectedRange === 'part1') baseList = masterWordList.filter(w => w.part === 1);
             else if (selectedRange === 'weak') baseList = masterWordList.filter(w => rec[w.id] && rec[w.id].s === -1);
             quizList = baseList.sort((a, b) => {
